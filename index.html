@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Defender</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        ::-webkit-scrollbar{
+            background: none;
+            width: 0;
+        }
+        body{
+            overflow: hidden;
+        }
+        canvas{
+            cursor: none;
+            background-image: url('./assets/imgs/chao5.jpg');
+            background-size: 10%;
+            filter: brightness(1.25) contrast(1.5);
+        }
+        .filter{
+            background-image: radial-gradient(#0000,#00000075);
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        #lucy{
+            position: fixed;
+            bottom:5px;
+            left:5px
+        }
+        #lucy:checked~.filter{
+            animation: lsd 5s infinite linear;
+        }
+        @keyframes lsd{
+            0%{
+                backdrop-filter: hue-rotate(0deg) contrast(1);
+            }
+            50%{
+                backdrop-filter: hue-rotate(180deg) contrast(2)
+            }
+            100%{
+                backdrop-filter: hue-rotate(360deg) contrast(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="lol" width="1200" height="900"></canvas>
+    <input type="checkbox" id="lucy">
+    <div class="filter"></div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
