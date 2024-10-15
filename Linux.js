@@ -8,8 +8,9 @@ export class Linux extends AnimatedObject{
         this.angle = Math.atan2(mousePos.x-(player.pos.x), mousePos.y-(player.pos.y))*-1+Math.PI/180*90
         this.pos = {x: player.pos.x, y: player.pos.y}
         this.speed = 15
-        this.life=1
+        this.life=4
         this.damage = 1
+        this.enemies=[]
         this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
     }
     #move(){

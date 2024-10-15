@@ -2,21 +2,36 @@ import { AnimatedObject } from "./animatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
 
-export class W11 extends AnimatedObject{
-    constructor(src, rows, columns, canvas, player, life=1){
+export class Enemy extends AnimatedObject{
+    static spawnRate = 1
+    constructor(src, rows, columns, canvas, player){
         super(src, rows,  columns)
-        this.pos={
-            x: Math.random() >= 0.5?Math.floor(Math.random()*(canvas.width*10)+canvas.width):Math.floor(Math.random()*(-canvas.width*10)),
-            y: Math.random() >= 0.5?Math.floor(Math.random()*(canvas.height*10)+canvas.height):Math.floor(Math.random()*(-canvas.height*10)),
+        this.dist=1000
+        if(Math.random()>=0.5){
+            this.pos={
+                x: Math.floor(Math.random()*(canvas.width+this.dist*2))-this.dist,
+                y: Math.random() >= 0.5?canvas.height+this.dist:-this.dist,
+            }
+        }
+        else{
+            this.pos={
+                x: Math.random() >= 0.5?canvas.width+this.dist:-this.dist,
+                y: Math.floor(Math.random()*(canvas.height+this.dist*2))-this.dist,
+            }
+
         }
         this.player = player
         this.speed = 1
         this.angle=0
         this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale,this.angle)
-        this.lifeTotal=life
-        this.life=life
+        this.lifeTotal=2
+        this.life=this.lifeTotal
         this.damage=1
         this.LifeBar = new LifeBar()
+        this.scale=.1
+        this.value=20
+        this.name='Wme'
+        this.invincibility=false
     }
 
     #updateAngle(){
@@ -41,5 +56,18 @@ export class W11 extends AnimatedObject{
             this.LifeBar.draw(ctx,this.pos.x,this.pos.y,this.wSprite,this.hSprite,this.scale,this.life,this.lifeTotal)
         }
 
+    }
+    mudarVida(value){
+        this.life+=value
+        if(this.life>this.lifeTotal){
+            this.life=this.lifeTotal
+        }
+        if(this.life<0){
+            this.life=0
+        }
+        return {header: this.name}
+    }
+    static getSpawnRate(){
+        return this.spawnRate
     }
 }
