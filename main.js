@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { Linux } from "./linux.js";
 import { Enemies } from "./Enemies.js";
-
+ 
 
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
