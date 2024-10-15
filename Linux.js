@@ -1,4 +1,4 @@
-import { AnimatedObject } from "./animatedObject.js";
+import { AnimatedObject } from "./AnimatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
 
 

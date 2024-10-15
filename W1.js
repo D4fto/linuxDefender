@@ -1,5 +1,4 @@
 import Allenemies from "./Allenemies.js";
-import { Enemies } from "./Enemies.js";
 import { Enemy } from "./Enemy.js";
 export class W1 extends Enemy {
     static spawnRate = .05

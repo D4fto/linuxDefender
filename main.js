@@ -1,7 +1,5 @@
 import { Player } from "./player.js";
 import { Linux } from "./linux.js";
-import { Enemy } from "./Enemy.js";
-import { W7 } from "./W7.js";
 import { Enemies } from "./Enemies.js";
 
 
