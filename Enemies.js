@@ -5,7 +5,7 @@ export class Enemies{
     constructor(canvas,player){
         console.log(Allenemies.W7.getSpawnRate())
         this.enemies=[]
-        this.timeIni=5000
+        this.timeIni=4000
         this.time=this.timeIni
         this.player = player
         this.Spawner= new Spawner(()=>{

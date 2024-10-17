@@ -31,7 +31,7 @@ let linuxs = []
 let SpawnerEnemies = new Enemies(canvas,player)
 
 canvas.addEventListener('click',()=>{
-if(linuxs.length<15){
+if(true){
     linuxs.push(new Linux('./assets/imgs/linux.png', 1, 1, mousePos, player))
     linuxs[linuxs.length-1].scale=.3
 }
@@ -100,11 +100,29 @@ function main(){
     ctx.fillStyle = '#00f';
     ctx.drawImage(mouseImage,mousePos.x-mouseImage.width/2, mousePos.y-mouseImage.height/2);
     ctx.fill();
+    ctx.beginPath()
+    const vignetteGradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, canvas.width / 4,
+        canvas.width / 2, canvas.height / 2, canvas.width / 2
+    );
+
+    vignetteGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    vignetteGradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+    
+    ctx.fillStyle = vignetteGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath()
+    ctx.font ='50px sans-serif'
+    ctx.fillStyle='#fff'
+    ctx.textBaseline = 'top'
+    ctx.textAlign = 'right'
+    ctx.fillText(`SCORE: ${player.getScore()}`,canvas.width-10,10)
+    ctx.fillText(`LEVEL: ${player.level}`,canvas.width-10,10+10+50)
     // ctx.translate(-canvas.width*5,-canvas.height*5)
     // ctx.scale(10,10)
-    loop = window.requestAnimationFrame(main)
 }
-main()
+setInterval(main,16)
+
 
 
 ctx.imageSmoothingEnabled = false;

@@ -4,6 +4,7 @@ import { LifeBar } from "./LifeBar.js";
 
 
 export class Player extends AnimatedObject{
+    #score
     constructor(src, rows, columns, pos){
         super(src, rows,  columns)
         this.playerAnima = setInterval(()=>{
@@ -15,17 +16,21 @@ export class Player extends AnimatedObject{
         this.right=0
         this.top=0
         this.bottom=0
-        this.speed=5
+        this.speed=8
         this.lifeTotal=40
         this.life=this.lifeTotal
         this.LifeBar = new LifeBar()
+        this.LifeBar.text='HP'
         this.xpBar = new LifeBar()
+        this.xpBar.text='XP'
         this.damage=1
         this.level=1
         this.xp=0
         this.filtros = [1,0,1]
         this.xpTotal=256*this.level
         this.invincibility=false
+        this.username='Narci'
+        this.#score = 0
     }
     #move(){
         this.pos.x+=this.speed*this.right-this.speed*this.left
@@ -37,6 +42,11 @@ export class Player extends AnimatedObject{
         this.CollisionShape.draw(ctx, '#0f0')
         
         ctx.beginPath();
+        ctx.font =`25px sans-serif`
+        ctx.fillStyle='#fff'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'bottom'
+        ctx.fillText(this.username,this.pos.x,this.pos.y+this.hSprite/-2*this.scale)
         ctx.save()
         ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`;
         ctx.translate(this.pos.x,this.pos.y)
@@ -92,6 +102,7 @@ export class Player extends AnimatedObject{
     }
     updateXp(value,Spawner){
         this.xp+=value
+        this.#score+=value/5
         while(this.xp>=this.xpTotal){
             this.xp=this.xp-this.xpTotal
             this.level++
@@ -101,4 +112,11 @@ export class Player extends AnimatedObject{
         }
 
     }
+<<<<<<< Updated upstream:player.js
 }
+=======
+    getScore(){
+        return this.#score
+    }
+}
+>>>>>>> Stashed changes:Player.js

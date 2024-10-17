@@ -6,7 +6,7 @@ export class W7 extends Enemy {
         const rows = 1;
         const columns = 1;
         super(src, rows, columns, canvas, player);
-        this.speed = .4;
+        this.speed = 1;
         this.lifeTotal = 50;
         this.life = this.lifeTotal;
         this.scale = 0.6;

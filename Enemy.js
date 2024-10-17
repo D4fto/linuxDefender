@@ -21,7 +21,7 @@ export class Enemy extends AnimatedObject{
 
         }
         this.player = player
-        this.speed = 1
+        this.speed = 2
         this.angle=0
         this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale,this.angle)
         this.lifeTotal=2
