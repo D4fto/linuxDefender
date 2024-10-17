@@ -44,12 +44,12 @@ export class CollisionShape {
         )
     }
     draw(ctx, color){
-        // ctx.save(); 
-        // ctx.translate(this.pos.x, this.pos.y); 
-        // ctx.rotate(this.angle); 
-        // ctx.translate(-this.size.width / 2, -this.size.height / 2); 
-        // ctx.strokeStyle = color;
-        // ctx.strokeRect(0, 0, this.size.width, this.size.height);
-        // ctx.restore(); 
+        ctx.save(); 
+        ctx.translate(this.pos.x, this.pos.y); 
+        ctx.rotate(this.angle); 
+        ctx.translate(-this.size.width / 2, -this.size.height / 2); 
+        ctx.strokeStyle = color;
+        ctx.strokeRect(0, 0, this.size.width, this.size.height);
+        ctx.restore(); 
     }
 }

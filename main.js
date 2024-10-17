@@ -2,7 +2,6 @@ import { Player } from "./player.js";
 import { Linux } from "./linux.js";
 import { Enemies } from "./Enemies.js";
  
-
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
 
@@ -59,7 +58,7 @@ function main(){
                         SpawnerEnemies.enemies.push(element3)
                     }
                 }
-                element.life-=element2.damage;
+                element.life--;
                 element.enemies.push(element2)
                 if(element.life<=0){
                     break
