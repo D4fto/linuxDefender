@@ -112,11 +112,11 @@ export class Player extends AnimatedObject{
         }
 
     }
-<<<<<<< Updated upstream:player.js
-}
-=======
+
+
+
     getScore(){
         return this.#score
     }
 }
->>>>>>> Stashed changes:Player.js
+
