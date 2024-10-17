@@ -3,7 +3,7 @@ import { CollisionShape } from "./CollisionShape.js";
 
 
 export class Linux extends AnimatedObject{
-    constructor(src, rows, columns, mousePos, player){
+    constructor(canvas,src, rows, columns, mousePos, player){
         super(src, rows,  columns)
         this.precision=3
         this.angle = Math.atan2(mousePos.x-(player.pos.x), mousePos.y-(player.pos.y))*-1+Math.PI/180*(Math.random()*((90+this.precision)-(90-this.precision))+(90-this.precision))
@@ -12,7 +12,9 @@ export class Linux extends AnimatedObject{
         this.life=3
         this.damage = 1
         this.enemies=[]
-        this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
+        this.canvas=canvas
+        this.ctx=this.canvas.getContext('2d')
+        this.CollisionShape = new CollisionShape(canvas,this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
     }
     #move(){
         this.pos.x += Math.cos(this.angle) * this.speed  

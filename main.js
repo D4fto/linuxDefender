@@ -5,7 +5,7 @@ import { Enemies } from "./Enemies.js";
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
 
-let loop
+let loop = null
 
 let mousePos = {
     x: 0,
@@ -16,25 +16,41 @@ canvas.addEventListener('mousemove', function(event) {
     mousePos.x = event.offsetX
     mousePos.y = event.offsetY
 });
+
 let mouseImage = new Image()
 mouseImage.src='./assets/imgs/mouse.png'
 ctx.imageSmoothingEnabled = false;
 canvas.height=window.innerHeight
 canvas.width=window.innerWidth
 
-const player = new Player('./assets/imgs/narci.png', 1, 9, {x: canvas.width/2, y:canvas.height/2})
+const player = new Player('./assets/imgs/narci.png', 1, 9, {x: canvas.width/2, y:canvas.height/2},canvas)
 player.scale = 3
 
 let linuxs = []
-
+let clickando = false
 let SpawnerEnemies = new Enemies(canvas,player)
 
-canvas.addEventListener('click',()=>{
-if(true){
-    linuxs.push(new Linux('./assets/imgs/linux.png', 1, 1, mousePos, player))
-    linuxs[linuxs.length-1].scale=.3
+// canvas.addEventListener('click',()=>{
+// if(true){
+//     linuxs.push(new Linux('./assets/imgs/linux.png', 1, 1, mousePos, player))
+//     linuxs[linuxs.length-1].scale=.3
+// }
+// })
+function config(){
+    
 }
+canvas.addEventListener('mousedown',()=>{
+    clickando=true
 })
+canvas.addEventListener('mouseup',()=>{
+    clickando=false
+})
+setInterval(()=>{
+    if(clickando){
+        linuxs.push(new Linux(canvas,'./assets/imgs/linux.png', 1, 1, mousePos, player))
+        linuxs[linuxs.length-1].scale=.3
+    }
+},200)
 window.addEventListener('keydown',(event)=>{
     player.verifyMovement(event,true)
 })
@@ -92,9 +108,9 @@ function main(){
             SpawnerEnemies.enemies.splice(i, 1);
             continue
         }
-        element.draw(ctx)
+        element.draw()
     }
-    player.draw(ctx, mousePos,canvas)
+    player.draw(mousePos)
     ctx.beginPath();
     ctx.fillStyle = '#00f';
     ctx.drawImage(mouseImage,mousePos.x-mouseImage.width/2, mousePos.y-mouseImage.height/2);
@@ -120,10 +136,17 @@ function main(){
     // ctx.translate(-canvas.width*5,-canvas.height*5)
     // ctx.scale(10,10)
 }
-setInterval(main,16)
+function start(scene,fps){
+    loop = setInterval(scene,Math.floor(1000/fps))
+}
+function stop(){
+    clearInterval(loop)
+    loop=null
+}
+function reset(){
 
-
-
+}
+start(main,60)
 ctx.imageSmoothingEnabled = false;
 window.addEventListener('resize',()=>{
     canvas.height=window.innerHeight

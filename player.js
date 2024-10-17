@@ -5,13 +5,13 @@ import { LifeBar } from "./LifeBar.js";
 
 export class Player extends AnimatedObject{
     #score
-    constructor(src, rows, columns, pos){
+    constructor(src, rows, columns, pos, canvas){
         super(src, rows,  columns)
         this.playerAnima = setInterval(()=>{
             this.translateColumn(1)
         },200) 
         this.pos=pos
-        this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
+        this.CollisionShape = new CollisionShape(canvas,this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
         this.left=0
         this.right=0
         this.top=0
@@ -19,9 +19,9 @@ export class Player extends AnimatedObject{
         this.speed=8
         this.lifeTotal=40
         this.life=this.lifeTotal
-        this.LifeBar = new LifeBar()
+        this.LifeBar = new LifeBar(canvas)
         this.LifeBar.text='HP'
-        this.xpBar = new LifeBar()
+        this.xpBar = new LifeBar(canvas)
         this.xpBar.text='XP'
         this.damage=1
         this.level=1
@@ -31,30 +31,33 @@ export class Player extends AnimatedObject{
         this.invincibility=false
         this.username='Narci'
         this.#score = 0
+        this.bullets = []
+        this.canvas=canvas
+        this.ctx=this.canvas.getContext('2d')
     }
     #move(){
         this.pos.x+=this.speed*this.right-this.speed*this.left
         this.pos.y+=this.speed*this.bottom-this.speed*this.top
     }
-    draw(ctx, mousePos,canvas){
+    draw(mousePos){
         this.#move()
         this.CollisionShape.update(this.pos.x,this.pos.y,this.wSprite*this.scale/1.5,this.hSprite*this.scale/1.5,Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
-        this.CollisionShape.draw(ctx, '#0f0')
+        this.CollisionShape.draw(this.ctx, '#0f0')
         
-        ctx.beginPath();
-        ctx.font =`25px sans-serif`
-        ctx.fillStyle='#fff'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'bottom'
-        ctx.fillText(this.username,this.pos.x,this.pos.y+this.hSprite/-2*this.scale)
-        ctx.save()
-        ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`;
-        ctx.translate(this.pos.x,this.pos.y)
-        ctx.rotate(Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
-        ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
-        ctx.restore()
-        this.LifeBar.draw(ctx,5+canvas.width/6,35+5,canvas.width/3,50,1,this.life,this.lifeTotal)
-        this.xpBar.draw(ctx,5+canvas.width/6,35+5+50+5,canvas.width/3,50,1,this.xp,this.xpTotal,50,20,['#444','#000','#09f'])
+        this.ctx.beginPath();
+        this.ctx.font =`25px sans-serif`
+        this.ctx.fillStyle='#fff'
+        this.ctx.textAlign = 'center'
+        this.ctx.textBaseline = 'bottom'
+        this.ctx.fillText(this.username,this.pos.x,this.pos.y+this.hSprite/-2*this.scale)
+        this.ctx.save()
+        this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`;
+        this.ctx.translate(this.pos.x,this.pos.y)
+        this.ctx.rotate(Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
+        this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
+        this.ctx.restore()
+        this.LifeBar.draw(5+this.canvas.width/6,35+5,this.canvas.width/3,50,1,this.life,this.lifeTotal)
+        this.xpBar.draw(5+this.canvas.width/6,35+5+50+5,this.canvas.width/3,50,1,this.xp,this.xpTotal,50,20,['#444','#000','#09f'])
     }
     verifyMovement(event,press){
         if(event.keyCode===65){
@@ -89,6 +92,7 @@ export class Player extends AnimatedObject{
     tomarDano(damage){
         if(!this.invincibility){
             this.life-=damage
+            this.life=this.life<0?0:this.life
             this.invincibility=true
             this.filtros=[10,1,1]
             setTimeout(()=>{
@@ -112,11 +116,11 @@ export class Player extends AnimatedObject{
         }
 
     }
-
-
-
     getScore(){
         return this.#score
+    }
+    atira(){
+
     }
 }
 

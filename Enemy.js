@@ -23,14 +23,16 @@ export class Enemy extends AnimatedObject{
         this.player = player
         this.speed = 2
         this.angle=0
-        this.CollisionShape = new CollisionShape(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale,this.angle)
+        this.CollisionShape = new CollisionShape(canvas,this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale,this.angle)
         this.lifeTotal=2
         this.life=this.lifeTotal
         this.damage=1
-        this.LifeBar = new LifeBar()
+        this.LifeBar = new LifeBar(canvas)
         this.scale=.1
         this.value=20
         this.name='Wme'
+        this.canvas=canvas
+        this.ctx=this.canvas.getContext('2d')
         this.invincibility=false
     }
 
@@ -41,19 +43,19 @@ export class Enemy extends AnimatedObject{
         this.pos.x += Math.cos(this.angle) * this.speed  
         this.pos.y += Math.sin(this.angle) * this.speed  
     }
-    draw(ctx){
+    draw(){
         this.#updateAngle()
         this.#move()
         this.CollisionShape.update(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale,this.angle)
-        this.CollisionShape.draw(ctx, '#f00')
-        ctx.beginPath();
-        ctx.save()
-        ctx.translate(this.pos.x,this.pos.y)
-        ctx.rotate(this.angle)
-        ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
-        ctx.restore()
+        this.CollisionShape.draw(this.ctx, '#f00')
+        this.ctx.beginPath();
+        this.ctx.save()
+        this.ctx.translate(this.pos.x,this.pos.y)
+        this.ctx.rotate(this.angle)
+        this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
+        this.ctx.restore()
         if(this.life/this.lifeTotal<1&&this.life/this.lifeTotal>0){
-            this.LifeBar.draw(ctx,this.pos.x,this.pos.y,this.wSprite,this.hSprite,this.scale,this.life,this.lifeTotal)
+            this.LifeBar.draw(this.pos.x,this.pos.y,this.wSprite,this.hSprite,this.scale,this.life,this.lifeTotal)
         }
 
     }
