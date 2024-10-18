@@ -1,17 +1,20 @@
-export class Spawner{
-    constructor(functio,timer){
-        this.function = functio
-        this.timer = timer
-        this.intervalId
+export class Spawner {
+    constructor(functio, timer) {
+        this.function = functio;
+        this.timer = timer;
+        this.intervalId = null;
     }
-    startSpawn(){
-        this.intervalId = setInterval(this.function,this.timer)
+
+    startSpawn() {
+        if (!this.intervalId) {
+            this.intervalId = setInterval(this.function, this.timer);
+        }
     }
-    pauseSpawn(){
-        clearInterval(this.intervalId)
-        this.intervalId=null
-    }
-    resumeSpawn(){
-        this.startSpawn()
+
+    clearSpawn() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
     }
 }

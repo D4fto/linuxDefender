@@ -1,6 +1,6 @@
 import { Player } from "./player.js";
-import { Linux } from "./linux.js";
 import { Enemies } from "./Enemies.js";
+import { Button } from "./Button.js";
  
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
@@ -12,32 +12,45 @@ let mousePos = {
     y: 0
 }
 
-canvas.addEventListener('mousemove', function(event) {
-    mousePos.x = event.offsetX
-    mousePos.y = event.offsetY
-});
 
 let mouseImage = new Image()
 mouseImage.src='./assets/imgs/mouse.png'
 ctx.imageSmoothingEnabled = false;
 canvas.height=window.innerHeight
 canvas.width=window.innerWidth
+const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'Iniciar Jogo')
+
+canvas.addEventListener('mousemove', function(event) {
+    mousePos.x = event.offsetX
+    mousePos.y = event.offsetY
+    botao.varifyHover(event.offsetX,event.offsetY)
+});
 
 const player = new Player('./assets/imgs/narci.png', 1, 9, {x: canvas.width/2, y:canvas.height/2},canvas)
 player.scale = 3
 
-let linuxs = []
+let level=1
+let score = 0
 let clickando = false
 let SpawnerEnemies = new Enemies(canvas,player)
-
-// canvas.addEventListener('click',()=>{
-// if(true){
-//     linuxs.push(new Linux('./assets/imgs/linux.png', 1, 1, mousePos, player))
-//     linuxs[linuxs.length-1].scale=.3
-// }
-// })
+let isMenu = true
+canvas.addEventListener('click',(event)=>{
+    if(isMenu){
+        if(botao.isClicked(event.offsetX,event.offsetY)){
+            stop()
+            reset()
+            config()
+            start(main,60)
+        }
+    }
+})
 function config(){
-    
+    player.initialize()
+    SpawnerEnemies.initialize()
+    ctx.imageSmoothingEnabled = false;
+    canvas.height=window.innerHeight
+    canvas.width=window.innerWidth
+    ctx.imageSmoothingEnabled = false;
 }
 canvas.addEventListener('mousedown',()=>{
     clickando=true
@@ -47,8 +60,7 @@ canvas.addEventListener('mouseup',()=>{
 })
 setInterval(()=>{
     if(clickando){
-        linuxs.push(new Linux(canvas,'./assets/imgs/linux.png', 1, 1, mousePos, player))
-        linuxs[linuxs.length-1].scale=.3
+        player.shoot(mousePos)
     }
 },200)
 window.addEventListener('keydown',(event)=>{
@@ -57,64 +69,16 @@ window.addEventListener('keydown',(event)=>{
 window.addEventListener('keyup',(event)=>{
     player.verifyMovement(event,false)
 })
-function main(){
-    // ctx.scale(.1,.1)
-    // ctx.translate(canvas.width*5,canvas.height*5)
-    ctx.clearRect(0,0,canvas.width, canvas.height)
-    for (let i = linuxs.length - 1; i >= 0; i--) {
-        
-        const element = linuxs[i];
-        element.draw(ctx);
-        for (let j = 0; j<SpawnerEnemies.enemies.length; j++) {
-            const element2=SpawnerEnemies.enemies[j]
-            if(element.CollisionShape.verifyCollision(element2.pos.x,element2.pos.y,element2.wSprite*element2.scale,element2.hSprite*element2.scale,element2.angle)&&!element.enemies.includes(element2)){
-                const enemy = element2.mudarVida(-player.damage,canvas,player);
-                if(enemy.header=='W1Spawn'){
-                    for (const element3 of enemy.enemies) {
-                        SpawnerEnemies.enemies.push(element3)
-                    }
-                }
-                element.life--;
-                element.enemies.push(element2)
-                if(element.life<=0){
-                    break
-                }
-            }
-        }
-
-        if (!element.isOnScreen(canvas)||element.life<=0) {
-            linuxs.splice(i, 1);
-        }
-    }
-    if(!player.invincibility){
-        for (let j = 0; j<SpawnerEnemies.enemies.length; j++) {
-            const element2=SpawnerEnemies.enemies[j]
-            if(player.CollisionShape.verifyCollision(element2.pos.x,element2.pos.y,element2.wSprite*element2.scale,element2.hSprite*element2.scale,element2.angle)){
-                const enemy = element2.mudarVida(-player.damage,canvas,player);
-                if(enemy.header=='W1Spawn'){
-                    for (const element3 of enemy.enemies) {
-                        SpawnerEnemies.enemies.push(element3)
-                    }
-                }
-                player.tomarDano(element2.damage);
-            }
-        }
-    }
-    for (let i = SpawnerEnemies.enemies.length - 1; i >= 0; i--) {
-        const element = SpawnerEnemies.enemies[i]
-        if(element.life<=0){
-            player.updateXp(SpawnerEnemies.enemies[i].value,SpawnerEnemies)
-
-            SpawnerEnemies.enemies.splice(i, 1);
-            continue
-        }
-        element.draw()
-    }
-    player.draw(mousePos)
+function mouse(){
     ctx.beginPath();
     ctx.fillStyle = '#00f';
     ctx.drawImage(mouseImage,mousePos.x-mouseImage.width/2, mousePos.y-mouseImage.height/2);
     ctx.fill();
+}
+function clear(){
+    ctx.clearRect(0,0,canvas.width, canvas.height)
+}
+function vignette(){
     ctx.beginPath()
     const vignetteGradient = ctx.createRadialGradient(
         canvas.width / 2, canvas.height / 2, canvas.width / 4,
@@ -126,6 +90,30 @@ function main(){
     
     ctx.fillStyle = vignetteGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+function main(){
+    // ctx.scale(.1,.1)
+    // ctx.translate(canvas.width*5,canvas.height*5)
+    isMenu=false
+    clear()
+    SpawnerEnemies.verifyEnemies()
+    player.verifyBullets(SpawnerEnemies)
+    player.verifyPlayerCollide(SpawnerEnemies)
+    player.draw(mousePos)
+    vignette()
+    mouse()
+    drawScoreLevel()
+    if(player.life<=0){
+        stop()
+        score=player.getScore()
+        level=player.level
+        reset()
+        start(menuKill,60)
+    }
+    // ctx.translate(-canvas.width*5,-canvas.height*5)
+    // ctx.scale(10,10)
+}
+function drawScoreLevel(){
     ctx.beginPath()
     ctx.font ='50px sans-serif'
     ctx.fillStyle='#fff'
@@ -133,23 +121,62 @@ function main(){
     ctx.textAlign = 'right'
     ctx.fillText(`SCORE: ${player.getScore()}`,canvas.width-10,10)
     ctx.fillText(`LEVEL: ${player.level}`,canvas.width-10,10+10+50)
-    // ctx.translate(-canvas.width*5,-canvas.height*5)
-    // ctx.scale(10,10)
 }
-function start(scene,fps){
-    loop = setInterval(scene,Math.floor(1000/fps))
+function menu(){
+    isMenu=true
+    clear()
+    vignette()
+    botao.draw(canvas.width/2-200,canvas.height/2-40,400,80)
+    ctx.beginPath()
+    ctx.font ='50px sans-serif'
+    ctx.fillStyle='#fff'
+    ctx.textBaseline = 'bottom'
+    ctx.textAlign = 'center'
+    ctx.fillText(`SCORE: ${score}`,canvas.width/2,canvas.height/2-50-10-40)
+    ctx.fillText(`LEVEL: ${level}`,canvas.width/2,canvas.height/2-10-40)
+    mouse()
+}
+function menuKill(){
+    menu()
+}
+function start(scene,fps,transicao=true){
+    if(transicao){
+        let lol = setInterval(()=>{
+            ctx.beginPath()
+            ctx.fillStyle='#0001'
+            ctx.fillRect(0,0,canvas.width,canvas.height)
+        },20)
+        setTimeout(()=>{
+            loop = setInterval(scene,Math.floor(1000/fps))
+            clearTimeout(lol)
+        },1000)
+    }
+    else{
+        scene()
+        loop = setInterval(scene,Math.floor(1000/fps))
+    }
 }
 function stop(){
     clearInterval(loop)
     loop=null
 }
 function reset(){
-
+    player.reset()
+    SpawnerEnemies.reset()
 }
-start(main,60)
+stop()
+reset()
+start(menu,60,false)
+
 ctx.imageSmoothingEnabled = false;
 window.addEventListener('resize',()=>{
     canvas.height=window.innerHeight
     canvas.width=window.innerWidth
     ctx.imageSmoothingEnabled = false;
+    if(isMenu){
+        menu()
+    }
+    else{
+        main()
+    }
 })

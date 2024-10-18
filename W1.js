@@ -14,7 +14,7 @@ export class W1 extends Enemy {
         this.value=100
         this.name='W1'
     }
-    mudarVida(value,canvas,player){
+    mudarVida(value){
         this.life+=value
         if(this.life>this.lifeTotal){
             this.life=this.lifeTotal
@@ -27,18 +27,18 @@ export class W1 extends Enemy {
             for(let i = 0;i<10;i++){
                 let tempEnemy
                 if(Math.random()<Allenemies.W7.getSpawnRate()){
-                    tempEnemy = new Allenemies.W7(canvas,player)
+                    tempEnemy = new Allenemies.W7(this.canvas,this.player)
                     tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                     tempEnemies.push(tempEnemy)
                     continue
                 }
                 if(Math.random()<Allenemies.W8.getSpawnRate()){
-                    tempEnemy = new Allenemies.W8(canvas,player)
+                    tempEnemy = new Allenemies.W8(this.canvas,this.player)
                     tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                     tempEnemies.push(tempEnemy)
                     continue
                 }
-                tempEnemy = new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas,player)
+                tempEnemy = new Allenemies.Enemy('./assets/imgs/me.png',1,1,this.canvas,this.player)
                 tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                 tempEnemies.push(tempEnemy)
             }
@@ -48,5 +48,10 @@ export class W1 extends Enemy {
             }
         }
         return {header: this.name}
+    }
+    spawn(enemy,SpawnerEnemies){
+        for (const element of enemy.enemies) {
+            SpawnerEnemies.enemies.push(element)
+        }
     }
 }

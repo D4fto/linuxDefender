@@ -72,4 +72,10 @@ export class Enemy extends AnimatedObject{
     static getSpawnRate(){
         return this.spawnRate
     }
+    takeDamage(element, font, SpawnerEnemies){
+        const enemy = element.mudarVida(-font.damage,this.canvas,this);
+        if(enemy.header=='W1Spawn'){
+            element.spawn(enemy,SpawnerEnemies)
+        }
+    }
 }

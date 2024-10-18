@@ -1,10 +1,12 @@
 import { AnimatedObject } from "./AnimatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
+import { Linux } from "./linux.js";
 
 
 export class Player extends AnimatedObject{
     #score
+    #ready
     constructor(src, rows, columns, pos, canvas){
         super(src, rows,  columns)
         this.playerAnima = setInterval(()=>{
@@ -33,6 +35,7 @@ export class Player extends AnimatedObject{
         this.#score = 0
         this.bullets = []
         this.canvas=canvas
+        this.#ready=true
         this.ctx=this.canvas.getContext('2d')
     }
     #move(){
@@ -51,7 +54,7 @@ export class Player extends AnimatedObject{
         this.ctx.textBaseline = 'bottom'
         this.ctx.fillText(this.username,this.pos.x,this.pos.y+this.hSprite/-2*this.scale)
         this.ctx.save()
-        this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`;
+        this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`
         this.ctx.translate(this.pos.x,this.pos.y)
         this.ctx.rotate(Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
         this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
@@ -119,8 +122,71 @@ export class Player extends AnimatedObject{
     getScore(){
         return this.#score
     }
-    atira(){
-
+    resetScore(){
+        this.#score=0
     }
+    shoot(mousePos){
+        if(this.#ready){
+            this.bullets.push(new Linux(this.canvas,'./assets/imgs/linux.png', 1, 1, mousePos, this))
+            this.bullets[this.bullets.length-1].scale=.3
+        }
+    }
+    verifyBullets(SpawnerEnemies){
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+        
+            const element = this.bullets[i];
+            element.draw(this.ctx);
+            for (let j = 0; j<SpawnerEnemies.enemies.length; j++) {
+                const element2=SpawnerEnemies.enemies[j]
+                if(element.CollisionShape.verifyCollision(element2.pos.x,element2.pos.y,element2.wSprite*element2.scale,element2.hSprite*element2.scale,element2.angle)&&!element.enemies.includes(element2)){
+                    element2.takeDamage(element2,element,SpawnerEnemies)
+                    element.life--;
+                    element.enemies.push(element2)
+                    if(element.life<=0){
+                        break
+                    }
+                }
+            }
+    
+            if (!element.isOnScreen(this.canvas)||element.life<=0) {
+                this.bullets.splice(i, 1);
+            }
+        }
+    }
+    verifyPlayerCollide(SpawnerEnemies){
+        if(!this.invincibility){
+            for (let j = 0; j<SpawnerEnemies.enemies.length; j++) {
+                const element=SpawnerEnemies.enemies[j]
+                if(this.CollisionShape.verifyCollision(element.pos.x,element.pos.y,element.wSprite*element.scale,element.hSprite*element.scale,element.angle)){
+                    element.takeDamage(element,this,SpawnerEnemies)
+                    this.tomarDano(element.damage);
+                }
+            }
+        }
+    }
+    resetLevel(){
+        this.level=1
+        this.xp=0
+        this.xpTotal=256*this.level
+    }
+    resetLife(){
+        this.lifeTotal=40
+        this.life=this.lifeTotal
+    }
+    reset(){
+        this.resetLevel()
+        this.resetLife()
+        this.resetScore()
+        clearInterval(this.playerAnima)
+        this.#ready=false
+        this.bullets=[]
+    }
+    initialize(){
+        this.#ready=true
+        this.playerAnima = setInterval(()=>{
+            this.translateColumn(1)
+        },200) 
+    }
+    
 }
 
