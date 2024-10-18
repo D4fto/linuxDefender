@@ -125,8 +125,12 @@ function drawScoreLevel(){
 function menu(){
     isMenu=true
     clear()
-    vignette()
     botao.draw(canvas.width/2-200,canvas.height/2-40,400,80)
+    vignette()
+    mouse()
+}
+function menuKill(){
+    menu()
     ctx.beginPath()
     ctx.font ='50px sans-serif'
     ctx.fillStyle='#fff'
@@ -134,10 +138,6 @@ function menu(){
     ctx.textAlign = 'center'
     ctx.fillText(`SCORE: ${score}`,canvas.width/2,canvas.height/2-50-10-40)
     ctx.fillText(`LEVEL: ${level}`,canvas.width/2,canvas.height/2-10-40)
-    mouse()
-}
-function menuKill(){
-    menu()
 }
 function start(scene,fps,transicao=true){
     if(transicao){
