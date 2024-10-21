@@ -20,13 +20,13 @@ export class AnimatedObject {
     }
 
     #initializeSpriteDimensions() {
-        this.wSprite = this.image.width / this.columns;
-        this.hSprite = this.image.height / this.rows;
+        this.wSprite = Math.floor(this.image.width / this.columns);
+        this.hSprite = Math.floor(this.image.height / this.rows);
     }
 
     #updateSpritePosition() {
-        this.posIniX = this.wSprite * this.column;
-        this.posIniY = this.hSprite * this.row;
+        this.posIniX = Math.floor(this.wSprite * this.column)-0.2;
+        this.posIniY = Math.floor(this.hSprite * this.row);
     }
 
     translateColumn(modifier) {

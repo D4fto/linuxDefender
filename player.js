@@ -9,11 +9,10 @@ export class Player extends AnimatedObject{
     #ready
     constructor(src, rows, columns, pos, canvas){
         super(src, rows,  columns)
-        this.playerAnima = setInterval(()=>{
-            this.translateColumn(1)
-        },200) 
+        this.playerAnima
         this.pos=pos
         this.CollisionShape = new CollisionShape(canvas,this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale)
+        this.angle=0
         this.left=0
         this.right=0
         this.top=0
@@ -42,11 +41,11 @@ export class Player extends AnimatedObject{
         this.pos.x+=this.speed*this.right-this.speed*this.left
         this.pos.y+=this.speed*this.bottom-this.speed*this.top
     }
-    draw(mousePos){
+    draw(mousePos,rotation){
         this.#move()
+        this.angle=Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180
         this.CollisionShape.update(this.pos.x,this.pos.y,this.wSprite*this.scale/1.5,this.hSprite*this.scale/1.5,Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
         this.CollisionShape.draw(this.ctx, '#0f0')
-        
         this.ctx.beginPath();
         this.ctx.font =`25px sans-serif`
         this.ctx.fillStyle='#fff'
@@ -56,11 +55,18 @@ export class Player extends AnimatedObject{
         this.ctx.save()
         this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`
         this.ctx.translate(this.pos.x,this.pos.y)
-        this.ctx.rotate(Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
+        this.ctx.rotate(this.angle)
         this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
         this.ctx.restore()
+        this.ctx.save()
+        if(rotation!=0){
+            this.ctx.translate(this.pos.x+this.wSprite/2,this.pos.y+this.hSprite/2)
+            this.ctx.rotate(-rotation)
+            this.ctx.translate(-this.pos.x-this.wSprite/2,-this.pos.y-this.hSprite/2)
+        }
         this.LifeBar.draw(5+this.canvas.width/6,35+5,this.canvas.width/3,50,1,this.life,this.lifeTotal)
         this.xpBar.draw(5+this.canvas.width/6,35+5+50+5,this.canvas.width/3,50,1,this.xp,this.xpTotal,50,20,['#444','#000','#09f'])
+        this.ctx.restore()
     }
     verifyMovement(event,press){
         if(event.keyCode===65){
@@ -129,6 +135,18 @@ export class Player extends AnimatedObject{
         if(this.#ready){
             this.bullets.push(new Linux(this.canvas,'./assets/imgs/linux.png', 1, 1, mousePos, this))
             this.bullets[this.bullets.length-1].scale=.3
+            clearInterval(this.playerAnima)
+            this.setRow(1)
+            this.playerAnima = setInterval(()=>{
+                this.translateColumn(1)
+                if(this.column==this.columns-1){
+                    this.setRow(0)
+                    clearInterval(this.playerAnima)
+                    this.playerAnima = setInterval(()=>{
+                        this.translateColumn(1)
+                    },200) 
+                }
+            },200/9) 
         }
     }
     verifyBullets(SpawnerEnemies){
@@ -160,9 +178,11 @@ export class Player extends AnimatedObject{
                 if(this.CollisionShape.verifyCollision(element.pos.x,element.pos.y,element.wSprite*element.scale,element.hSprite*element.scale,element.angle)){
                     element.takeDamage(element,this,SpawnerEnemies)
                     this.tomarDano(element.damage);
+                    return true
                 }
             }
         }
+        return false
     }
     resetLevel(){
         this.level=1

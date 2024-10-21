@@ -4,7 +4,7 @@ import Allenemies from "./Allenemies.js";
 export class Enemies{
     constructor(canvas,player){
         this.enemies=[]
-        this.timeIni=3500
+        this.timeIni=2250
         this.time=this.timeIni
         this.player = player
         this.Spawner= new Spawner(()=>{
@@ -18,6 +18,9 @@ export class Enemies{
                 if(Math.random()<Allenemies.W8.getSpawnRate()){
                     this.enemies.push(new Allenemies.W8(canvas,player))
                 }
+                if(Math.random()<Allenemies.WVista.getSpawnRate()){
+                    this.enemies.push(new Allenemies.WVista(canvas,player))
+                }
                 this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas,player))
             }
         },this.time)
@@ -26,7 +29,7 @@ export class Enemies{
     updateFreq(){
         this.Spawner.clearSpawn()
         if(this.Spawner.timer>100){
-            this.Spawner.timer = this.timeIni - 300 * (Math.pow(1.1, this.player.level-1) - 1)
+            this.Spawner.timer = this.timeIni - 300 * (Math.pow(1.2, this.player.level-1) - 1)
             this.Spawner.timer = this.Spawner.timer>=100?this.Spawner.timer:100
         }
         this.Spawner.startSpawn()

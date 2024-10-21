@@ -19,14 +19,22 @@ ctx.imageSmoothingEnabled = false;
 canvas.height=window.innerHeight
 canvas.width=window.innerWidth
 const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'Iniciar Jogo')
-
+const music = new Audio('./assets/sounds/music.mp3')
+music.addEventListener('canplaythrough',()=>{
+    music.loop = true;
+})
 canvas.addEventListener('mousemove', function(event) {
     mousePos.x = event.offsetX
     mousePos.y = event.offsetY
     botao.varifyHover(event.offsetX,event.offsetY)
 });
+function playMusic() {
+    music.play().catch(error => {
+        console.error("Erro ao tentar tocar a música:", error);
+    });
+}
 
-const player = new Player('./assets/imgs/narci.png', 1, 9, {x: canvas.width/2, y:canvas.height/2},canvas)
+const player = new Player('./assets/imgs/narci.png', 2, 9, {x: canvas.width/2, y:canvas.height/2},canvas)
 player.scale = 3
 
 let level=1
@@ -35,11 +43,18 @@ let clickando = false
 let SpawnerEnemies = new Enemies(canvas,player)
 let isMenu = true
 canvas.addEventListener('click',(event)=>{
+    playMusic()
     if(isMenu){
         if(botao.isClicked(event.offsetX,event.offsetY)){
             stop()
             reset()
             config()
+            music.pause()
+            let audio = new Audio('./assets/sounds/Windows XP Sound.mp3')
+            audio.play()
+            audio.addEventListener('ended', () => {
+                music.play()
+            });
             start(main,60)
         }
     }
@@ -47,7 +62,6 @@ canvas.addEventListener('click',(event)=>{
 function config(){
     player.initialize()
     SpawnerEnemies.initialize()
-    ctx.imageSmoothingEnabled = false;
     canvas.height=window.innerHeight
     canvas.width=window.innerWidth
     ctx.imageSmoothingEnabled = false;
@@ -91,26 +105,43 @@ function vignette(){
     ctx.fillStyle = vignetteGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
+let rotation = 0
 function main(){
     // ctx.scale(.1,.1)
-    // ctx.translate(canvas.width*5,canvas.height*5)
-    isMenu=false
     clear()
+    isMenu=false
+    rotation = player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
+    ctx.save();
+    ctx.translate(player.pos.x + player.wSprite / 2, player.pos.y + player.hSprite / 2);
+    ctx.rotate(rotation);
+    ctx.translate(-player.pos.x - player.wSprite / 2, -player.pos.y - player.hSprite / 2);
     SpawnerEnemies.verifyEnemies()
     player.verifyBullets(SpawnerEnemies)
-    player.verifyPlayerCollide(SpawnerEnemies)
-    player.draw(mousePos)
+    player.draw(mousePos,rotation)
+    ctx.restore()
     vignette()
     mouse()
     drawScoreLevel()
+    if(rotation>.03){
+        rotation-=.015
+    }else if(rotation<-.03){
+        rotation+=.015
+    }else{
+        rotation=0
+    }
     if(player.life<=0){
         stop()
         score=player.getScore()
         level=player.level
         reset()
+        canvas.height=window.innerHeight
+        canvas.width=window.innerWidth
+        ctx.imageSmoothingEnabled = false;
+        new Audio('./assets/sounds/Windows XP  Sound 2.mp3').play()
         start(menuKill,60)
     }
-    // ctx.translate(-canvas.width*5,-canvas.height*5)
+    
+    
     // ctx.scale(10,10)
 }
 function drawScoreLevel(){
@@ -145,11 +176,11 @@ function start(scene,fps,transicao=true){
             ctx.beginPath()
             ctx.fillStyle='#0001'
             ctx.fillRect(0,0,canvas.width,canvas.height)
-        },20)
+        },80)
         setTimeout(()=>{
             loop = setInterval(scene,Math.floor(1000/fps))
             clearTimeout(lol)
-        },1000)
+        },4000)
     }
     else{
         scene()
@@ -166,6 +197,9 @@ function reset(){
 }
 stop()
 reset()
+canvas.height=window.innerHeight
+canvas.width=window.innerWidth
+ctx.imageSmoothingEnabled = false;
 start(menu,60,false)
 
 ctx.imageSmoothingEnabled = false;
@@ -180,3 +214,4 @@ window.addEventListener('resize',()=>{
         main()
     }
 })
+music.load()
