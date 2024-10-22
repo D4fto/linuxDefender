@@ -26,10 +26,10 @@ function redimensionar(){
     divCanvas.style.width=window.innerWidth+'px'
     diagonal = Math.floor(Math.hypot(canvas.height,canvas.width))
     ctx.imageSmoothingEnabled = false;
-    background.style.height=diagonal+'px'
-    background.style.width=diagonal+'px'
-    background.style.top=-((diagonal-canvas.height)/2)+'px'
-    background.style.left=-((diagonal-canvas.width)/2)+'px'
+    background.style.height=diagonal*3+'px'
+    background.style.width=diagonal*3+'px'
+    background.style.top=(-diagonal)+'px'
+    background.style.left=(-diagonal)+'px'
     console.log(background)
 }
 const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'Iniciar Jogo')
@@ -96,10 +96,10 @@ window.addEventListener('keyup',(event)=>{
     player.verifyMovement(event,false)
 })
 function mouse(){
-    ctx.beginPath();
-    ctx.fillStyle = '#00f';
-    ctx.drawImage(mouseImage,mousePos.x-mouseImage.width/2, mousePos.y-mouseImage.height/2);
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.fillStyle = '#00f';
+    // ctx.drawImage(mouseImage,mousePos.x-mouseImage.width/2, mousePos.y-mouseImage.height/2);
+    // ctx.fill();
 }
 function clear(){
     ctx.clearRect(0,0,canvas.width, canvas.height)
@@ -125,6 +125,7 @@ function main(){
     rotation = player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
     if(rotation!=0){
         background.style.transform = `rotate(${rotation}rad)`
+        background.style.transformOrigin = `${player.pos.x+(diagonal)}px ${player.pos.y+(diagonal)}px`
     }
     ctx.save();
     ctx.translate(player.pos.x + player.wSprite / 2, player.pos.y + player.hSprite / 2);

@@ -36,6 +36,7 @@ export class Player extends AnimatedObject{
         this.canvas=canvas
         this.#ready=true
         this.ctx=this.canvas.getContext('2d')
+        this.#checkOnScreen()
     }
     #move(){
         this.pos.x+=this.speed*this.right-this.speed*this.left
@@ -194,6 +195,8 @@ export class Player extends AnimatedObject{
         this.life=this.lifeTotal
     }
     reset(){
+        this.pos.x=this.canvas.width/2
+        this.pos.y=this.canvas.height/2
         this.resetLevel()
         this.resetLife()
         this.resetScore()
@@ -207,6 +210,20 @@ export class Player extends AnimatedObject{
             this.translateColumn(1)
         },200) 
     }
+    #checkOnScreen(){
+        // setInterval(()=>{
+        //     console.log(this.#isOnScreen)
+        //     if(!this.#isOnScreen()){
+        //         this.tomarDano(this.lifeTotal*.1)
+        //     }
+        // },1000)
+    }
+    // #isOnScreen(){
+    //     if(this.pos.x<-this.canvas.width/2||this.pos.x>this.canvas.width+this.canvas.width/2||this.pos.y<-this.canvas.height/2||this.pos.y>this.canvas.height+this.canvas.height/2){
+    //         return false
+    //     }
+    //     return true
+    // }
     
 }
 
