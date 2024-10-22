@@ -31,6 +31,14 @@ export class W1 extends Enemy {
                     tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                     tempEnemies.push(tempEnemy)
                     continue
+                
+                }
+                if(Math.random()<Allenemies.WVista.getSpawnRate()){
+                    tempEnemy = new Allenemies.WVista(this.canvas,this.player)
+                    tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
+                    tempEnemies.push(tempEnemy)
+                    continue
+                
                 }
                 if(Math.random()<Allenemies.W8.getSpawnRate()){
                     tempEnemy = new Allenemies.W8(this.canvas,this.player)

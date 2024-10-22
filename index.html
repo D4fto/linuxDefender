@@ -20,8 +20,13 @@
         }
         canvas{
             cursor: none;
+            
+        }
+        #background{
             background-image: url('./assets/imgs/chao3.jpg');
             background-size: 10%;
+            position: absolute;
+            z-index: -1;
         }
         .filter{
             height: 100vh;
@@ -53,7 +58,10 @@
     </style>
 </head>
 <body>
-    <canvas id="lol" width="1200" height="900"></canvas>
+    <div style="position: relative; overflow: hidden;" id="divCanvas">
+        <div id="background"></div>
+        <canvas id="lol" width="1200" height="900"></canvas>
+    </div>
     <input type="checkbox" id="lucy">
     <div class="filter"></div>
     <script type="module" src="./main.js"></script>

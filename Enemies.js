@@ -8,6 +8,7 @@ export class Enemies{
         this.time=this.timeIni
         this.player = player
         this.Spawner= new Spawner(()=>{
+            console.log(this.Spawner.timer)
             if(this.enemies.length<1000){
                 if(Math.random()<Allenemies.W7.getSpawnRate()){
                     this.enemies.push(new Allenemies.W7(canvas,player))
@@ -50,6 +51,7 @@ export class Enemies{
     }
     reset(){
         this.Spawner.clearSpawn()
+        this.Spawner.timer=this.timeIni
         this.time=this.timeIni
         this.clearEnemies()
     }

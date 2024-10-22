@@ -2,8 +2,12 @@ import { Player } from "./player.js";
 import { Enemies } from "./Enemies.js";
 import { Button } from "./Button.js";
  
+const background = document.getElementById('background')
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
+const divCanvas = document.getElementById('divCanvas')
+
+let diagonal = 0
 
 let loop = null
 
@@ -15,9 +19,19 @@ let mousePos = {
 
 let mouseImage = new Image()
 mouseImage.src='./assets/imgs/mouse.png'
-ctx.imageSmoothingEnabled = false;
-canvas.height=window.innerHeight
-canvas.width=window.innerWidth
+function redimensionar(){
+    canvas.height=window.innerHeight
+    canvas.width=window.innerWidth
+    divCanvas.style.height=window.innerHeight+'px'
+    divCanvas.style.width=window.innerWidth+'px'
+    diagonal = Math.floor(Math.hypot(canvas.height,canvas.width))
+    ctx.imageSmoothingEnabled = false;
+    background.style.height=diagonal+'px'
+    background.style.width=diagonal+'px'
+    background.style.top=-((diagonal-canvas.height)/2)+'px'
+    background.style.left=-((diagonal-canvas.width)/2)+'px'
+    console.log(background)
+}
 const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'Iniciar Jogo')
 const music = new Audio('./assets/sounds/music.mp3')
 music.addEventListener('canplaythrough',()=>{
@@ -62,9 +76,7 @@ canvas.addEventListener('click',(event)=>{
 function config(){
     player.initialize()
     SpawnerEnemies.initialize()
-    canvas.height=window.innerHeight
-    canvas.width=window.innerWidth
-    ctx.imageSmoothingEnabled = false;
+    redimensionar()
 }
 canvas.addEventListener('mousedown',()=>{
     clickando=true
@@ -111,6 +123,9 @@ function main(){
     clear()
     isMenu=false
     rotation = player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
+    if(rotation!=0){
+        background.style.transform = `rotate(${rotation}rad)`
+    }
     ctx.save();
     ctx.translate(player.pos.x + player.wSprite / 2, player.pos.y + player.hSprite / 2);
     ctx.rotate(rotation);
@@ -123,9 +138,9 @@ function main(){
     mouse()
     drawScoreLevel()
     if(rotation>.03){
-        rotation-=.015
+        rotation-=.0175
     }else if(rotation<-.03){
-        rotation+=.015
+        rotation+=.0175
     }else{
         rotation=0
     }
@@ -134,9 +149,7 @@ function main(){
         score=player.getScore()
         level=player.level
         reset()
-        canvas.height=window.innerHeight
-        canvas.width=window.innerWidth
-        ctx.imageSmoothingEnabled = false;
+        redimensionar()
         new Audio('./assets/sounds/Windows XP  Sound 2.mp3').play()
         start(menuKill,60)
     }
@@ -197,16 +210,13 @@ function reset(){
 }
 stop()
 reset()
-canvas.height=window.innerHeight
-canvas.width=window.innerWidth
-ctx.imageSmoothingEnabled = false;
+
+redimensionar()
 start(menu,60,false)
 
 ctx.imageSmoothingEnabled = false;
 window.addEventListener('resize',()=>{
-    canvas.height=window.innerHeight
-    canvas.width=window.innerWidth
-    ctx.imageSmoothingEnabled = false;
+    redimensionar()
     if(isMenu){
         menu()
     }

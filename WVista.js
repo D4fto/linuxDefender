@@ -22,7 +22,7 @@ export class WVista extends Enemy {
     }
     
     dash() {
-        this.speed = 50;
+        this.speed = 60;
         this.rotationSpeed = 0;
         clearInterval(this.timer)
         setTimeout(this.unDash, 125);
