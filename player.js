@@ -211,19 +211,19 @@ export class Player extends AnimatedObject{
         },200) 
     }
     #checkOnScreen(){
-        // setInterval(()=>{
-        //     console.log(this.#isOnScreen)
-        //     if(!this.#isOnScreen()){
-        //         this.tomarDano(this.lifeTotal*.1)
-        //     }
-        // },1000)
+        setInterval(()=>{
+            console.log(this.#isOnScreen)
+            if(!this.#isOnScreen()){
+                this.tomarDano(this.lifeTotal*.1)
+            }
+        },1000)
     }
-    // #isOnScreen(){
-    //     if(this.pos.x<-this.canvas.width/2||this.pos.x>this.canvas.width+this.canvas.width/2||this.pos.y<-this.canvas.height/2||this.pos.y>this.canvas.height+this.canvas.height/2){
-    //         return false
-    //     }
-    //     return true
-    // }
+    #isOnScreen(){
+        if(this.pos.x<-this.canvas.width/2||this.pos.x>this.canvas.width+this.canvas.width/2||this.pos.y<-this.canvas.height/2||this.pos.y>this.canvas.height+this.canvas.height/2){
+            return false
+        }
+        return true
+    }
     
 }
 
