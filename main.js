@@ -44,6 +44,11 @@ canvas.addEventListener('mousemove', function(event) {
     mousePos.y = event.offsetY
     botao.varifyHover(event.offsetX,event.offsetY)
 });
+canvas.addEventListener('touchmove', function(event) {
+    mousePos.x = event.offsetX
+    mousePos.y = event.offsetY
+    botao.varifyHover(event.offsetX,event.offsetY)
+});
 function playMusic() {
     music.play().catch(error => {
         console.error("Erro ao tentar tocar a música:", error);
