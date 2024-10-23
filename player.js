@@ -2,12 +2,12 @@ import { AnimatedObject } from "./AnimatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
 import { Linux } from "./linux.js";
-
+import { DamageCount } from "./damageCount.js";
 
 export class Player extends AnimatedObject{
     #score
     #ready
-    constructor(src, rows, columns, pos, canvas){
+    constructor(src, rows, columns, pos, canvas, global){
         super(src, rows,  columns)
         this.playerAnima
         this.pos=pos
@@ -16,6 +16,7 @@ export class Player extends AnimatedObject{
         this.left=0
         this.right=0
         this.top=0
+        this.DamageCount = DamageCount
         this.bottom=0
         this.speed=8
         this.lifeTotal=40
@@ -37,6 +38,7 @@ export class Player extends AnimatedObject{
         this.#ready=true
         this.ctx=this.canvas.getContext('2d')
         this.#checkOnScreen()
+        this.global = global
     }
     #move(){
         this.pos.x+=this.speed*this.right-this.speed*this.left
@@ -102,6 +104,7 @@ export class Player extends AnimatedObject{
     tomarDano(damage){
         if(!this.invincibility){
             this.life-=damage
+            this.global.damageCounts.push(new this.DamageCount(this.ctx,Math.abs(damage),[this.pos.x+Math.random()*this.wSprite-this.wSprite/2,this.pos.y-this.hSprite],[Math.random()*1-.5,-Math.random()*3],50,'#00f'))
             this.life=this.life<0?0:this.life
             this.invincibility=true
             this.filtros=[10,1,1]
@@ -212,7 +215,6 @@ export class Player extends AnimatedObject{
     }
     #checkOnScreen(){
         setInterval(()=>{
-            console.log(this.#isOnScreen)
             if(!this.#isOnScreen()){
                 this.tomarDano(this.lifeTotal*.1)
             }

@@ -2,27 +2,27 @@ import { Spawner } from "./Spawner.js";
 import Allenemies from "./Allenemies.js";
 
 export class Enemies{
-    constructor(canvas,player){
+    constructor(canvas,player, global){
         this.enemies=[]
         this.timeIni=2250
         this.time=this.timeIni
         this.player = player
+        this.global = global
         this.Spawner= new Spawner(()=>{
-            console.log(this.Spawner.timer)
             if(this.enemies.length<1000){
                 if(Math.random()<Allenemies.W7.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W7(canvas,player))
+                    this.enemies.push(new Allenemies.W7(canvas,player, global))
                 }
                 if(Math.random()<Allenemies.W1.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W1(canvas,player))
+                    this.enemies.push(new Allenemies.W1(canvas,player, global))
                 }
                 if(Math.random()<Allenemies.W8.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W8(canvas,player))
+                    this.enemies.push(new Allenemies.W8(canvas,player, global))
                 }
                 if(Math.random()<Allenemies.WVista.getSpawnRate()){
-                    this.enemies.push(new Allenemies.WVista(canvas,player))
+                    this.enemies.push(new Allenemies.WVista(canvas,player, global))
                 }
-                this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas,player))
+                this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas,player, global))
             }
         },this.time)
         this.updateFreq()

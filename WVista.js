@@ -1,11 +1,11 @@
 import { Enemy } from "./Enemy.js";
 export class WVista extends Enemy {
     static spawnRate = .1
-    constructor(canvas, player) {
+    constructor(canvas, player, global) {
         const src = './assets/imgs/wVista.png';
         const rows = 1;
         const columns = 1;
-        super(src, rows, columns, canvas, player);
+        super(src, rows, columns, canvas, player, global);
         this.speed = 0;
         this.lifeTotal = 5;
         this.life = this.lifeTotal;
@@ -13,6 +13,7 @@ export class WVista extends Enemy {
         this.value = 60;
         this.name = 'WVista';
         this.rotationSpeed = 0;
+        this.damage=3
         this.unDash = this.unDash.bind(this);
         this.dash = this.dash.bind(this);
         this.unDash();

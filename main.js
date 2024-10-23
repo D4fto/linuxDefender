@@ -1,11 +1,14 @@
 import { Player } from "./player.js";
 import { Enemies } from "./Enemies.js";
 import { Button } from "./Button.js";
+import { Global } from "./global.js";
  
 const background = document.getElementById('background')
 const canvas = document.getElementById('lol')
 const ctx = canvas.getContext('2d')
 const divCanvas = document.getElementById('divCanvas')
+
+let global = new Global()
 
 let diagonal = 0
 
@@ -30,7 +33,6 @@ function redimensionar(){
     background.style.width=diagonal*3+'px'
     background.style.top=(-diagonal)+'px'
     background.style.left=(-diagonal)+'px'
-    console.log(background)
 }
 const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'NOVO JOGO')
 const music = new Audio('./assets/sounds/music.mp3')
@@ -48,13 +50,13 @@ function playMusic() {
     });
 }
 
-const player = new Player('./assets/imgs/narci.png', 2, 9, {x: canvas.width/2, y:canvas.height/2},canvas)
+const player = new Player('./assets/imgs/narci.png', 2, 9, {x: canvas.width/2, y:canvas.height/2},canvas, global)
 player.scale = 3
 
 let level=1
 let score = 0
 let clickando = false
-let SpawnerEnemies = new Enemies(canvas,player)
+let SpawnerEnemies = new Enemies(canvas,player,global)
 let isMenu = true
 canvas.addEventListener('click',(event)=>{
     playMusic()
@@ -86,9 +88,11 @@ canvas.addEventListener('mouseup',()=>{
 })
 setInterval(()=>{
     if(clickando){
-        player.shoot(mousePos)
+        for (let i = 0; i < 1; i++) {
+            player.shoot(mousePos)
+        }
     }
-},200)
+},1)
 window.addEventListener('keydown',(event)=>{
     player.verifyMovement(event,true)
 })
@@ -133,6 +137,7 @@ function main(){
     ctx.translate(-player.pos.x - player.wSprite / 2, -player.pos.y - player.hSprite / 2);
     SpawnerEnemies.verifyEnemies()
     player.verifyBullets(SpawnerEnemies)
+    global.drawDamageCounts()
     player.draw(mousePos,rotation)
     ctx.restore()
     vignette()

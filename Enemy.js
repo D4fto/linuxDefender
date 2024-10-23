@@ -1,10 +1,11 @@
 import { AnimatedObject } from "./AnimatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
+import { DamageCount } from "./damageCount.js";
 
 export class Enemy extends AnimatedObject{
     static spawnRate = 1
-    constructor(src, rows, columns, canvas, player){
+    constructor(src, rows, columns, canvas, player, global){
         super(src, rows,  columns)
         this.dist=1000
         if(Math.random()>=0.5){
@@ -20,6 +21,8 @@ export class Enemy extends AnimatedObject{
             }
 
         }
+        this.DamageCount = DamageCount
+        this.global = global
         this.filter = ''
         this.player = player
         this.speed = 2
@@ -64,7 +67,7 @@ export class Enemy extends AnimatedObject{
     mudarVida(value){
         this.life+=value
         if(value<0){
-            this.tomouDano()
+            this.tomouDano(value)
         }
         if(this.life>this.lifeTotal){
             this.life=this.lifeTotal
@@ -83,8 +86,9 @@ export class Enemy extends AnimatedObject{
             element.spawn(enemy,SpawnerEnemies)
         }
     }
-    tomouDano(){
+    tomouDano(value){
         this.filter='brightness(10) sepia(1)'
+        this.global.damageCounts.push(new this.DamageCount(this.ctx,Math.abs(value),[this.pos.x+Math.random()*this.wSprite-this.wSprite/2,this.pos.y-this.hSprite],[Math.random()*1-.5,-Math.random()*3],50,'#f00'))
         setTimeout(()=>{
             this.filter=''
         },75)
