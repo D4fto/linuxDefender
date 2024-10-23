@@ -103,7 +103,7 @@ setInterval(()=>{
             player.shoot(mousePos)
         }
     }
-},1)
+},200)
 window.addEventListener('keydown',(event)=>{
     player.verifyMovement(event,true)
 })
