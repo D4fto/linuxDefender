@@ -30,7 +30,7 @@ export class Player extends AnimatedObject{
         this.filtros = [1,0,1]
         this.xpTotal=256*this.level
         this.invincibility=false
-        this.username='narci'
+        this.username='Narci'
         this.#score = 0
         this.bullets = []
         this.canvas=canvas

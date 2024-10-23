@@ -49,6 +49,7 @@ export class WVista extends Enemy {
         this.CollisionShape.draw(this.ctx, '#f00')
         this.ctx.beginPath();
         this.ctx.save()
+        this.ctx.filter = this.filter
         this.ctx.translate(this.pos.x,this.pos.y)
         this.ctx.rotate(this.angle)
         this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)

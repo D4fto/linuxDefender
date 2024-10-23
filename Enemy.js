@@ -20,6 +20,7 @@ export class Enemy extends AnimatedObject{
             }
 
         }
+        this.filter = ''
         this.player = player
         this.speed = 2
         this.angle=0
@@ -50,6 +51,7 @@ export class Enemy extends AnimatedObject{
         this.CollisionShape.draw(this.ctx, '#f00')
         this.ctx.beginPath();
         this.ctx.save()
+        this.ctx.filter = this.filter
         this.ctx.translate(this.pos.x,this.pos.y)
         this.ctx.rotate(this.angle)
         this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
@@ -61,6 +63,9 @@ export class Enemy extends AnimatedObject{
     }
     mudarVida(value){
         this.life+=value
+        if(value<0){
+            this.tomouDano()
+        }
         if(this.life>this.lifeTotal){
             this.life=this.lifeTotal
         }
@@ -77,5 +82,11 @@ export class Enemy extends AnimatedObject{
         if(enemy.header=='W1Spawn'){
             element.spawn(enemy,SpawnerEnemies)
         }
+    }
+    tomouDano(){
+        this.filter='brightness(10) sepia(1)'
+        setTimeout(()=>{
+            this.filter=''
+        },75)
     }
 }

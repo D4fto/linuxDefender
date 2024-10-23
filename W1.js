@@ -16,6 +16,9 @@ export class W1 extends Enemy {
     }
     mudarVida(value){
         this.life+=value
+        if(value<0){
+            this.tomouDano()
+        }
         if(this.life>this.lifeTotal){
             this.life=this.lifeTotal
         }
