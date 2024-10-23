@@ -15,11 +15,11 @@ export class LifeBar{
         this.ctx.fillStyle=colors[2]
         this.ctx.fillRect(x-width*scale/2+Math.floor(scale*param2/2),y-height*scale/2-10+Math.floor(scale*param2/2),(width*scale-Math.floor(scale*param2))*(life/lifeTotal),Math.floor(scale*param1)-Math.floor(scale*param2))
         if(this.text!=''){
-            this.ctx.font =`${(Math.floor(scale*param1)-Math.floor(scale*param2))*.75}px sans-serif`
+            this.ctx.font =`${(Math.floor(scale*param1)-Math.floor(scale*param2))*.75}px PixelFont`
             this.ctx.fillStyle='#fff'
             this.ctx.textAlign = 'right'
             this.ctx.textBaseline = 'middle'
-            this.ctx.fillText(this.text,(x-width*scale/2+Math.floor(scale*param2/2))+(width*scale-Math.floor(scale*param2))-5,((Math.floor(scale*param1)*.5-Math.floor(scale*param2)*.5))+(y-height*scale/2-10+Math.floor(scale*param2/2)*1.25))
+            this.ctx.fillText(this.text,(x-width*scale/2+Math.floor(scale*param2/2))+(width*scale-Math.floor(scale*param2))-5,((Math.floor(scale*param1)*.5-Math.floor(scale*param2)*.5))+(y-height*scale/2-10+Math.floor(scale*param2/2)))
         }
     }
 }

@@ -28,7 +28,7 @@ export class Enemy extends AnimatedObject{
         this.life=this.lifeTotal
         this.damage=1
         this.LifeBar = new LifeBar(canvas)
-        this.scale=.1
+        this.scale=1
         this.value=20
         this.name='Wme'
         this.canvas=canvas
@@ -55,7 +55,7 @@ export class Enemy extends AnimatedObject{
         this.ctx.drawImage(this.image,this.posIniX,this.posIniY,this.wSprite,this.hSprite,this.wSprite/-2*this.scale,this.hSprite/-2*this.scale,this.wSprite*this.scale,this.hSprite*this.scale)
         this.ctx.restore()
         if(this.life/this.lifeTotal<1&&this.life/this.lifeTotal>0){
-            this.LifeBar.draw(this.pos.x,this.pos.y,this.wSprite,this.hSprite,this.scale,this.life,this.lifeTotal)
+            this.LifeBar.draw(this.pos.x,this.pos.y-this.scale*40,this.wSprite*4,this.hSprite,this.scale/4,this.life,this.lifeTotal)
         }
 
     }

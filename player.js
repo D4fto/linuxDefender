@@ -30,7 +30,7 @@ export class Player extends AnimatedObject{
         this.filtros = [1,0,1]
         this.xpTotal=256*this.level
         this.invincibility=false
-        this.username='Narci'
+        this.username='narci'
         this.#score = 0
         this.bullets = []
         this.canvas=canvas
@@ -48,7 +48,7 @@ export class Player extends AnimatedObject{
         this.CollisionShape.update(this.pos.x,this.pos.y,this.wSprite*this.scale/1.5,this.hSprite*this.scale/1.5,Math.atan2(mousePos.x-(this.pos.x), mousePos.y-(this.pos.y))*-1+Math.PI/180)
         this.CollisionShape.draw(this.ctx, '#0f0')
         this.ctx.beginPath();
-        this.ctx.font =`25px sans-serif`
+        this.ctx.font =`25px PixelFont`
         this.ctx.fillStyle='#fff'
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'bottom'

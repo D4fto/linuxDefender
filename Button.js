@@ -28,10 +28,10 @@ export class Button{
         this.ctx.fillStyle = this.backgroundColor
         this.ctx.fillRect(this.x+this.border[0], this.y+this.border[0], this.width-this.border[0]*2, this.height-this.border[0]*2)
         this.ctx.fillStyle = this.color
-        this.ctx.font = `${this.height-this.border[0]*2-5}px sans-serif`
+        this.ctx.font = `${(this.height-this.border[0]*2)*.75}px PixelFont`
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'middle'
-        this.ctx.fillText(this.text,this.x+this.width/2,this.y+this.height/2,this.width-this.border[0]*2-5)
+        this.ctx.fillText(this.text,this.x+this.width/2,this.y+this.height/2-5,this.width-this.border[0]*2-5)
         this.ctx.filter = `brightness(1)`
     }
     varifyHover(mouseX, mouseY) {

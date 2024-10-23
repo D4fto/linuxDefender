@@ -10,7 +10,7 @@ export class W1 extends Enemy {
         this.speed = 1.2;
         this.lifeTotal = 10;
         this.life = this.lifeTotal;
-        this.scale = 0.4;
+        this.scale = 1.2;
         this.value=100
         this.name='W1'
     }

@@ -32,7 +32,7 @@ function redimensionar(){
     background.style.left=(-diagonal)+'px'
     console.log(background)
 }
-const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'Iniciar Jogo')
+const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'NOVO JOGO')
 const music = new Audio('./assets/sounds/music.mp3')
 music.addEventListener('canplaythrough',()=>{
     music.loop = true;
@@ -160,7 +160,7 @@ function main(){
 }
 function drawScoreLevel(){
     ctx.beginPath()
-    ctx.font ='50px sans-serif'
+    ctx.font ='50px PixelFont'
     ctx.fillStyle='#fff'
     ctx.textBaseline = 'top'
     ctx.textAlign = 'right'
@@ -177,7 +177,7 @@ function menu(){
 function menuKill(){
     menu()
     ctx.beginPath()
-    ctx.font ='50px sans-serif'
+    ctx.font ='50px PixelFont'
     ctx.fillStyle='#fff'
     ctx.textBaseline = 'bottom'
     ctx.textAlign = 'center'
