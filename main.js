@@ -86,6 +86,12 @@ canvas.addEventListener('mousedown',()=>{
 canvas.addEventListener('mouseup',()=>{
     clickando=false
 })
+canvas.addEventListener('touchstart',()=>{
+    clickando=true
+})
+canvas.addEventListener('touchend',()=>{
+    clickando=false
+})
 setInterval(()=>{
     if(clickando){
         for (let i = 0; i < 1; i++) {
