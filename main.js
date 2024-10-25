@@ -19,6 +19,9 @@ let mousePos = {
     y: 0
 }
 
+canvas.addEventListener('contextmenu', (event) => {
+    event.preventDefault()
+})
 
 let mouseImage = new Image()
 mouseImage.src='./assets/imgs/mouse.png'
@@ -110,6 +113,7 @@ window.addEventListener('keydown',(event)=>{
 window.addEventListener('keyup',(event)=>{
     player.verifyMovement(event,false)
 })
+
 function mouse(){
     // ctx.beginPath();
     // ctx.fillStyle = '#00f';
@@ -134,7 +138,6 @@ function vignette(){
 }
 let rotation = 0
 function main(){
-    // ctx.scale(.1,.1)
     clear()
     isMenu=false
     rotation = player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
@@ -146,6 +149,9 @@ function main(){
     ctx.translate(player.pos.x + player.wSprite / 2, player.pos.y + player.hSprite / 2);
     ctx.rotate(rotation);
     ctx.translate(-player.pos.x - player.wSprite / 2, -player.pos.y - player.hSprite / 2);
+    
+    // ctx.scale(.1,.1)
+    rotation = global.drawRams(player)?Math.random()*(.6)-.3:rotation
     SpawnerEnemies.verifyEnemies()
     player.verifyBullets(SpawnerEnemies)
     global.drawDamageCounts()
@@ -172,7 +178,6 @@ function main(){
     }
     
     
-    // ctx.scale(10,10)
 }
 function drawScoreLevel(){
     ctx.beginPath()
@@ -187,8 +192,27 @@ function menu(){
     isMenu=true
     clear()
     botao.draw(canvas.width/2-200,canvas.height/2-40,400,80)
+    ctx.beginPath()
+    drawTitle(canvas.width/2,canvas.height/2-50,150)
     vignette()
     mouse()
+}
+function drawTitle(x,y,font){
+    ctx.font =''+font+'px PixelFont'
+    ctx.fillStyle='#000'
+    ctx.textBaseline = 'bottom'
+    ctx.textAlign = 'center'
+    ctx.fillText(`LINUX`,x,y-font)
+    ctx.fillText(`DEFENDER`,x,y)
+    ctx.font =''+(font+5)+'px PixelFont'
+    ctx.fillStyle='#ff0'
+    ctx.fillText(`LINUX`,x,y-font)
+    ctx.fillText(`DEFENDER`,x,y)
+    ctx.font =''+(font+5)+'px PixelFont'
+    ctx.lineWidth = '3'
+    ctx.strokeStyle='#000'
+    ctx.strokeText(`LINUX`,x,y-font)
+    ctx.strokeText(`DEFENDER`,x,y)
 }
 function menuKill(){
     menu()
@@ -197,8 +221,8 @@ function menuKill(){
     ctx.fillStyle='#fff'
     ctx.textBaseline = 'bottom'
     ctx.textAlign = 'center'
-    ctx.fillText(`SCORE: ${score}`,canvas.width/2,canvas.height/2-50-10-40)
-    ctx.fillText(`LEVEL: ${level}`,canvas.width/2,canvas.height/2-10-40)
+    ctx.fillText(`SCORE: ${score}`,canvas.width/2,canvas.height/2+50+50+10+40)
+    ctx.fillText(`LEVEL: ${level}`,canvas.width/2,canvas.height/2+50+10+40)
 }
 function start(scene,fps,transicao=true){
     if(transicao){

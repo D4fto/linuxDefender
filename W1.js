@@ -29,19 +29,23 @@ export class W1 extends Enemy {
             let tempEnemies=[]
             for(let i = 0;i<10;i++){
                 let tempEnemy
-                if(Math.random()<Allenemies.W7.getSpawnRate()){
+                if(this.player.level>5&&Math.random()<Allenemies.W7.getSpawnRate()){
                     tempEnemy = new Allenemies.W7(this.canvas,this.player,this.global)
                     tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                     tempEnemies.push(tempEnemy)
                     continue
-                
                 }
-                if(Math.random()<Allenemies.WVista.getSpawnRate()){
+                if(this.player.level>3&&Math.random()<Allenemies.WVista.getSpawnRate()){
                     tempEnemy = new Allenemies.WVista(this.canvas,this.player,this.global)
                     tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
                     tempEnemies.push(tempEnemy)
                     continue
-                
+                }
+                if(this.player.level>4&&Math.random()<Allenemies.W11.getSpawnRate()){
+                    tempEnemy = new Allenemies.W11(this.canvas,this.player,this.global)
+                    tempEnemy.pos={x: this.pos.x+((Math.random()-0.5)*300), y: this.pos.y+((Math.random()-0.5)*300)}
+                    tempEnemies.push(tempEnemy)
+                    continue
                 }
                 if(Math.random()<Allenemies.W8.getSpawnRate()){
                     tempEnemy = new Allenemies.W8(this.canvas,this.player,this.global)

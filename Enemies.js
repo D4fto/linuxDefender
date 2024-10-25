@@ -10,19 +10,22 @@ export class Enemies{
         this.global = global
         this.Spawner= new Spawner(()=>{
             if(this.enemies.length<1000){
-                if(Math.random()<Allenemies.W7.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W7(canvas,player, global))
+                if(player.level>0&&Math.random()<Allenemies.W7.getSpawnRate()){
+                    this.enemies.push(new Allenemies.W7(canvas, player, global))
                 }
-                if(Math.random()<Allenemies.W1.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W1(canvas,player, global))
+                if(player.level>0&&Math.random()<Allenemies.W11.getSpawnRate()){
+                    this.enemies.push(new Allenemies.W11(canvas, player, global))
                 }
-                if(Math.random()<Allenemies.W8.getSpawnRate()){
-                    this.enemies.push(new Allenemies.W8(canvas,player, global))
+                if(player.level>2&&Math.random()<Allenemies.W1.getSpawnRate()){
+                    this.enemies.push(new Allenemies.W1(canvas, player, global))
                 }
-                if(Math.random()<Allenemies.WVista.getSpawnRate()){
-                    this.enemies.push(new Allenemies.WVista(canvas,player, global))
+                if(player.level>0&&Math.random()<Allenemies.W8.getSpawnRate()){
+                    this.enemies.push(new Allenemies.W8(canvas, player, global))
                 }
-                this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas,player, global))
+                if(player.level>0&&Math.random()<Allenemies.WVista.getSpawnRate()){
+                    this.enemies.push(new Allenemies.WVista(canvas, player, global))
+                }
+                this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas, player, global))
             }
         },this.time)
         this.updateFreq()
@@ -53,6 +56,11 @@ export class Enemies{
         this.Spawner.clearSpawn()
         this.Spawner.timer=this.timeIni
         this.time=this.timeIni
+        for (const item of this.enemies) {
+            if(item.name == 'W11'){
+                clearInterval(item.loop)
+            }
+        }
         this.clearEnemies()
     }
     initialize(){

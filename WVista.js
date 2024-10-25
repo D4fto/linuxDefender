@@ -7,13 +7,13 @@ export class WVista extends Enemy {
         const columns = 1;
         super(src, rows, columns, canvas, player, global);
         this.speed = 0;
-        this.lifeTotal = 5;
+        this.lifeTotal = 10;
         this.life = this.lifeTotal;
         this.scale = 2;
         this.value = 60;
         this.name = 'WVista';
         this.rotationSpeed = 0;
-        this.damage=3
+        this.damage=2
         this.unDash = this.unDash.bind(this);
         this.dash = this.dash.bind(this);
         this.unDash();
@@ -23,10 +23,10 @@ export class WVista extends Enemy {
     }
     
     dash() {
-        this.speed = 60;
+        this.speed = 70;
         this.rotationSpeed = 0;
         clearInterval(this.timer)
-        setTimeout(this.unDash, 125);
+        setTimeout(this.unDash, 150);
     }
     
     unDash() {
@@ -34,7 +34,7 @@ export class WVista extends Enemy {
         this.timer=setInterval(()=>{
             this.rotationSpeed+=1
         },200)
-        setTimeout(this.dash, 3500);
+        setTimeout(this.dash, 3000);
     }
     #updateAngle(){
         this.angle = (this.angle+Math.PI/180*this.rotationSpeed)%(Math.PI*2)
