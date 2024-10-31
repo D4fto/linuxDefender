@@ -87,6 +87,7 @@ export class Enemy extends AnimatedObject{
         }
     }
     tomouDano(value){
+        this.global.playSound('/assets/sounds/error'+this.name+'.mp3')
         this.filter='brightness(10) sepia(1)'
         this.global.damageCounts.push(new this.DamageCount(this.ctx,Math.abs(value),[this.pos.x+Math.random()*this.wSprite-this.wSprite/2,this.pos.y-this.hSprite],[Math.random()*1-.5,-Math.random()*3],50,'#f00'))
         setTimeout(()=>{

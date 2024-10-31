@@ -26,7 +26,7 @@ export class Player extends AnimatedObject{
         this.xpBar = new LifeBar(canvas)
         this.xpBar.text='XP'
         this.damage=1
-        this.level=1
+        this.level=1 
         this.xp=0
         this.filtros = [1,0,1]
         this.xpTotal=256*this.level
@@ -104,6 +104,7 @@ export class Player extends AnimatedObject{
     tomarDano(damage){
         if(!this.invincibility){
             this.life-=damage
+            this.global.playSound('/assets/sounds/hurt.mp3')
             this.global.damageCounts.push(new this.DamageCount(this.ctx,Math.abs(damage),[this.pos.x+Math.random()*this.wSprite-this.wSprite/2,this.pos.y-this.hSprite],[Math.random()*1-.5,-Math.random()*3],50,'#00f'))
             this.life=this.life<0?0:this.life
             this.invincibility=true
@@ -138,6 +139,7 @@ export class Player extends AnimatedObject{
     shoot(mousePos){
         if(this.#ready){
             this.bullets.push(new Linux(this.canvas,'./assets/imgs/linux.png', 1, 1, mousePos, this))
+            this.global.playSound('/assets/sounds/shoot.mp3')
             this.bullets[this.bullets.length-1].scale=.3
             clearInterval(this.playerAnima)
             this.setRow(1)

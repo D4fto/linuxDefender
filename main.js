@@ -39,6 +39,7 @@ function redimensionar(){
 }
 const botao = new Button(ctx,canvas.width/2-200,canvas.height/2-40,400,80,'NOVO JOGO')
 const music = new Audio('./assets/sounds/music.mp3')
+music.volume = global.globalVolume
 music.addEventListener('canplaythrough',()=>{
     music.loop = true;
 })
@@ -75,6 +76,7 @@ canvas.addEventListener('click',(event)=>{
             config()
             music.pause()
             let audio = new Audio('./assets/sounds/Windows XP Sound.mp3')
+            audio.volume = global.globalVolume
             audio.play()
             audio.addEventListener('ended', () => {
                 music.play()
@@ -106,7 +108,7 @@ setInterval(()=>{
             player.shoot(mousePos)
         }
     }
-},200)
+},200) 
 window.addEventListener('keydown',(event)=>{
     player.verifyMovement(event,true)
 })
@@ -173,7 +175,7 @@ function main(){
         level=player.level
         reset()
         redimensionar()
-        new Audio('./assets/sounds/Windows XP  Sound 2.mp3').play()
+        global.playSound('./assets/sounds/Windows XP  Sound 2.mp3')
         start(menuKill,60)
     }
     

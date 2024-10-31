@@ -10,10 +10,10 @@ export class Enemies{
         this.global = global
         this.Spawner= new Spawner(()=>{
             if(this.enemies.length<1000){
-                if(player.level>0&&Math.random()<Allenemies.W7.getSpawnRate()){
+                if(player.level>5&&Math.random()<Allenemies.W7.getSpawnRate()){
                     this.enemies.push(new Allenemies.W7(canvas, player, global))
                 }
-                if(player.level>0&&Math.random()<Allenemies.W11.getSpawnRate()){
+                if(player.level>4&&Math.random()<Allenemies.W11.getSpawnRate()){
                     this.enemies.push(new Allenemies.W11(canvas, player, global))
                 }
                 if(player.level>2&&Math.random()<Allenemies.W1.getSpawnRate()){
@@ -22,7 +22,7 @@ export class Enemies{
                 if(player.level>0&&Math.random()<Allenemies.W8.getSpawnRate()){
                     this.enemies.push(new Allenemies.W8(canvas, player, global))
                 }
-                if(player.level>0&&Math.random()<Allenemies.WVista.getSpawnRate()){
+                if(player.level>3&&Math.random()<Allenemies.WVista.getSpawnRate()){
                     this.enemies.push(new Allenemies.WVista(canvas, player, global))
                 }
                 this.enemies.push(new Allenemies.Enemy('./assets/imgs/me.png',1,1,canvas, player, global))
