@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .naoselecionavel{
+    -webkit-touch-callout: none;  
+    -webkit-user-select: none;    
+    -khtml-user-select: none;     
+    -moz-user-select: none;       
+    -ms-user-select: none;        
+    user-select: none;  
+}
+        canvas{
+            border: 1px solid #000;
+            cursor: none;
+            touch-action: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:800px; height:800px"></div>
+    <canvas id="paint" width="800px" height="800px" class="naoselecionavel"></canvas>
+    <canvas id="canvasmouse" width="800px" height="800px" class="naoselecionavel" style="pointer-events: none;" ></canvas>
+    <i id="icone" class="bi bi-pencil"></i>
+    <span>Size: </span><input type="range" name="tam" id="tam" min="1" max="50" step="1" >
+    <span>Red: </span><input type="range" id="r" min="0" max="255" step="1" value="0">
+    <span>Green: </span><input type="range" id="g" min="0" max="255" step="1" value="0">
+    <span>Blue: </span><input type="range" id="b" min="0" max="255" step="1" value="0">
+    <span style="height: 20px; width: 20px; background-color: rgb(0, 0, 0); display: flex; border: 1px solid black;" id="colorOut"></span>
+    <script>
+        const canvas = document.getElementById('paint')
+        const canvasmouse = document.getElementById('canvasmouse')
+        const ctx = canvas.getContext('2d')
+        const ctxmouse = canvasmouse.getContext('2d')
+        const icone = document.getElementById('icone')
+        const tam = document.getElementById('tam')
+        const red = document.getElementById('r')
+        const green = document.getElementById('g')
+        const blue = document.getElementById('b')
+        const colorOut = document.getElementById('colorOut')
+        tam.addEventListener('input',()=>{
+            brushSize=Number(tam.value)
+        })
+        red.addEventListener('input',()=>{
+            r=Number(red.value)
+            colorOut.style.backgroundColor=`rgb(${r}, ${g}, ${b})`
+        })
+        green.addEventListener('input',()=>{
+            g=Number(green.value)
+            colorOut.style.backgroundColor=`rgb(${r}, ${g}, ${b})`
+        })
+        blue.addEventListener('input',()=>{
+            b=Number(blue.value)
+            colorOut.style.backgroundColor=`rgb(${r}, ${g}, ${b})`
+        })
+        window.addEventListener('keydown',(event)=>{
+            if(event.keyCode===69){
+                if(icone.classList.contains('bi-pencil')){
+                    icone.classList.add('bi-eraser')
+                    icone.classList.remove('bi-pencil')
+                    isEraser=true
+                    
+                }else{
+                    icone.classList.remove('bi-eraser')
+                    icone.classList.add('bi-pencil')
+                    isEraser=false
+                }
+            }
+        })
+        let brushSize=20
+        let brushMin=1
+        let pressure = 1
+        let clicking = false
+        let angle = 0
+        let r = 0
+        let g = 0
+        let b = 0
+        let isEraser = false
+        let mousePos = {
+            x:0,
+            y:0
+        }
+        canvas.addEventListener('pointermove',(event)=>{
+            console.log(event)
+            pressure = event.pressure
+            if(event.pointerType=='mouse'){
+                pressure=1
+            }
+            mousePos.x = event.offsetX
+            mousePos.y = event.offsetY
+        })
+        let currrentLocation = [400,400]
+        canvas.addEventListener('pointerdown',(event)=>{
+            currrentLocation[0] = event.offsetX
+            currrentLocation[1] = event.offsetY
+            clicking = true
+        })
+        canvas.addEventListener('pointerup',(event)=>{
+            clicking = false
+        })
+        canvas.addEventListener('pointercancel',(event)=>{
+            clicking = false
+        })
+
+        function draw(){
+            console.log('jdshf')
+            if(clicking){
+                for (let i = 0; i < 200; i++) {
+                    angle=Math.atan2(mousePos.x-(currrentLocation[0]), mousePos.y-(currrentLocation[1]))
+                    if(Math.abs(currrentLocation[0]-mousePos.x)>.2){
+                        currrentLocation[0]+=Math.sin(angle)*.2
+                    }
+                    if(Math.abs(currrentLocation[1]-mousePos.y)>.2){
+                        currrentLocation[1]+=Math.cos(angle)*.2
+                    }
+                    ctx.beginPath()
+                    if(Math.abs(currrentLocation[0]-mousePos.x)>.2||Math.abs(currrentLocation[1]-mousePos.y)>.2){
+                        if(isEraser){
+                            ctx.clearRect(currrentLocation[0]-((brushSize-brushMin)*pressure+brushMin),currrentLocation[1]-((brushSize-brushMin)*pressure+brushMin),((brushSize-brushMin)*pressure+brushMin)*2,((brushSize-brushMin)*pressure+brushMin)*2)
+                        }else{
+                            ctx.save()
+                            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${pressure})`
+                            
+                            
+                            ctx.arc(currrentLocation[0],currrentLocation[1],(brushSize-brushMin)*pressure+brushMin,0,2*Math.PI)
+                            ctx.fill()
+                            ctx.restore()
+                        }
+
+                    }
+                }
+            }
+            ctxmouse.clearRect(0,0,canvasmouse.width,canvasmouse.height)
+            ctxmouse.beginPath()
+            ctxmouse.strokeStyle = '#000'
+            ctxmouse.lineWidth = 2
+            if(clicking){
+                ctxmouse.arc(mousePos.x,mousePos.y,(brushSize-brushMin)*pressure+brushMin,0,2*Math.PI)
+            }
+            else{
+                ctxmouse.arc(mousePos.x,mousePos.y,brushSize,0,2*Math.PI)
+            }
+            ctxmouse.stroke()
+            ctxmouse.beginPath()
+            ctxmouse.strokeStyle = '#fff'
+            ctxmouse.lineWidth = 2
+            if(clicking){
+                ctxmouse.arc(mousePos.x,mousePos.y,(brushSize-brushMin)*pressure+brushMin+2,0,2*Math.PI)
+            }
+            else{
+                ctxmouse.arc(mousePos.x,mousePos.y,brushSize+2,0,2*Math.PI)
+            }
+            ctxmouse.stroke()
+            window.requestAnimationFrame(draw);
+        }
+        window.requestAnimationFrame(draw);
+    </script>
+</body>
+</html>
