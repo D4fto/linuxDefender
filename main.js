@@ -22,7 +22,7 @@ let mousePos = {
 canvas.addEventListener('contextmenu', (event) => {
     event.preventDefault()
 })
-
+ 
 let mouseImage = new Image()
 mouseImage.src='./assets/imgs/mouse.png'
 function redimensionar(){
@@ -43,12 +43,7 @@ music.volume = global.globalVolume
 music.addEventListener('canplaythrough',()=>{
     music.loop = true;
 })
-canvas.addEventListener('mousemove', function(event) {
-    mousePos.x = event.offsetX
-    mousePos.y = event.offsetY
-    botao.varifyHover(event.offsetX,event.offsetY)
-});
-canvas.addEventListener('touchmove', function(event) {
+canvas.addEventListener('pointermove', function(event) {
     mousePos.x = event.offsetX
     mousePos.y = event.offsetY
     botao.varifyHover(event.offsetX,event.offsetY)
@@ -70,7 +65,7 @@ let isMenu = true
 canvas.addEventListener('click',(event)=>{
     playMusic()
     if(isMenu){
-        if(botao.isClicked(event.offsetX,event.offsetY)){
+        if(botao.isClicked(event.offsetX,event.offsetY)&&isMenu){
             stop()
             reset()
             config()
@@ -90,16 +85,10 @@ function config(){
     SpawnerEnemies.initialize()
     redimensionar()
 }
-canvas.addEventListener('mousedown',()=>{
+canvas.addEventListener('pointerdown',()=>{
     clickando=true
 })
-canvas.addEventListener('mouseup',()=>{
-    clickando=false
-})
-canvas.addEventListener('touchstart',()=>{
-    clickando=true
-})
-canvas.addEventListener('touchend',()=>{
+canvas.addEventListener('pointerup',()=>{
     clickando=false
 })
 setInterval(()=>{
@@ -126,15 +115,34 @@ function clear(){
     ctx.clearRect(0,0,canvas.width, canvas.height)
 }
 function vignette(){
-    ctx.beginPath()
-    const vignetteGradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, canvas.width / 4,
-        canvas.width / 2, canvas.height / 2, canvas.width / 2
-    );
+    let power = .7
+    let ini = 0.8
+    let vignetteGradient = ctx.createLinearGradient(canvas.width/2, canvas.height/2, canvas.width, canvas.height/2);
 
-    vignetteGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    vignetteGradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-    
+    vignetteGradient.addColorStop(ini, 'rgba(0, 0, 0, 0)')
+    vignetteGradient.addColorStop(1, `rgba(0, 0, 0, ${power})`)
+
+    ctx.fillStyle = vignetteGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    vignetteGradient = ctx.createLinearGradient(canvas.width/2, canvas.height/2, 0, canvas.height/2);
+
+    vignetteGradient.addColorStop(ini, 'rgba(0, 0, 0, 0)')
+    vignetteGradient.addColorStop(1, `rgba(0, 0, 0, ${power})`)
+
+    ctx.fillStyle = vignetteGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    vignetteGradient = ctx.createLinearGradient(canvas.width/2, canvas.height/2, canvas.width/2, 0);
+
+    vignetteGradient.addColorStop(ini, 'rgba(0, 0, 0, 0)')
+    vignetteGradient.addColorStop(1, `rgba(0, 0, 0, ${power})`)
+
+    ctx.fillStyle = vignetteGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    vignetteGradient = ctx.createLinearGradient(canvas.width/2, canvas.height/2, canvas.width/2, canvas.height);
+
+    vignetteGradient.addColorStop(ini, 'rgba(0, 0, 0, 0)')
+    vignetteGradient.addColorStop(1, `rgba(0, 0, 0, ${power})`)
+
     ctx.fillStyle = vignetteGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -157,10 +165,18 @@ function main(){
     SpawnerEnemies.verifyEnemies()
     player.verifyBullets(SpawnerEnemies)
     global.drawDamageCounts()
+    for (let i = 0; i < global.particles.layer1.length; i++) {
+        let element = global.particles.layer1[i];
+        if(element.life<=0){
+            global.particles.layer1.splice(i,1)
+        }
+        element.draw()
+    }
     player.draw(mousePos,rotation)
     ctx.restore()
     vignette()
     mouse()
+    player.drawBars()
     drawScoreLevel()
     if(rotation>.03){
         rotation-=.0175
@@ -197,7 +213,6 @@ function menu(){
     ctx.beginPath()
     drawTitle(canvas.width/2,canvas.height/2-50,150)
     vignette()
-    mouse()
 }
 function drawTitle(x,y,font){
     ctx.font =''+font+'px PixelFont'
@@ -227,6 +242,7 @@ function menuKill(){
     ctx.fillText(`LEVEL: ${level}`,canvas.width/2,canvas.height/2+50+10+40)
 }
 function start(scene,fps,transicao=true){
+    
     if(transicao){
         let lol = setInterval(()=>{
             ctx.beginPath()
@@ -248,6 +264,7 @@ function stop(){
     loop=null
 }
 function reset(){
+    isMenu=false
     player.reset()
     SpawnerEnemies.reset()
 }

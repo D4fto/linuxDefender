@@ -3,10 +3,11 @@ import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
 import { Linux } from "./linux.js";
 import { DamageCount } from "./damageCount.js";
+import { Particle } from "./particle.js";
 
 export class Player extends AnimatedObject{
     #score
-    #ready
+    #ready 
     constructor(src, rows, columns, pos, canvas, global){
         super(src, rows,  columns)
         this.playerAnima
@@ -39,10 +40,31 @@ export class Player extends AnimatedObject{
         this.ctx=this.canvas.getContext('2d')
         this.#checkOnScreen()
         this.global = global
+        this.moveAngle = 0
+        this.legs=new AnimatedObject('./assets/imgs/pernas.png',1,10)
+    }
+    updateMoveAngle(){
+        this.moveAngle = Math.PI/180*-90
+        if(this.right-this.left!=0){
+            if(this.right-this.left==-1){
+                this.moveAngle+=Math.PI/180*(45*(this.top-this.bottom))
+                
+            }else if(this.right-this.left==1){
+                this.moveAngle+=Math.PI/180*(-45*(this.top-this.bottom))
+                
+            }
+        }else if(this.top){
+            this.moveAngle+=Math.PI
+            
+        }
+        this.moveAngle+=Math.PI/180*(-90*(this.right-this.left))
+        this.moveAngle*=-1
     }
     #move(){
         this.pos.x+=this.speed*this.right-this.speed*this.left
         this.pos.y+=this.speed*this.bottom-this.speed*this.top
+        this.updateMoveAngle()
+        
     }
     draw(mousePos,rotation){
         this.#move()
@@ -55,6 +77,14 @@ export class Player extends AnimatedObject{
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'bottom'
         this.ctx.fillText(this.username,this.pos.x,this.pos.y+this.hSprite/-2*this.scale)
+        if(this.top-this.bottom!=0||this.right-this.left!=0){
+            this.drawPernas()
+            if(Math.random()>.75){
+                new Particle('./assets/imgs/fumaca.png',1,5,500,1.25,this.pos.x+Math.floor(Math.random() * (20 + 20) - 20),this.pos.y+Math.floor(Math.random() * (20 + 20) - 20),1,this.global,this.ctx, this.moveAngle*-1+Math.PI/180*Math.floor(Math.random() * (45 + 45) - 45), Math.floor(Math.random() * (5 - 3) + 3), .5)
+            }
+
+
+        }
         this.ctx.save()
         this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`
         this.ctx.translate(this.pos.x,this.pos.y)
@@ -67,9 +97,33 @@ export class Player extends AnimatedObject{
             this.ctx.rotate(-rotation)
             this.ctx.translate(-this.pos.x-this.wSprite/2,-this.pos.y-this.hSprite/2)
         }
+        
+        this.ctx.restore()
+    }
+    drawPernas(){
+        this.ctx.save()
+        this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`
+        this.ctx.translate(this.pos.x,this.pos.y)
+        // if(this.right-this.left!=0){
+            // if(this.right-this.left==-1){
+            //     this.ctx.rotate(Math.PI/180*(45*(this.top-this.bottom)))
+                
+            // }else if(this.right-this.left==1){
+            //     this.ctx.rotate(Math.PI/180*(-45*(this.top-this.bottom)))
+                
+            // }
+        // }else if(this.top){
+        //     this.ctx.rotate(Math.PI)
+            
+        // }
+        // this.ctx.rotate(Math.PI/180*(-90*(this.right-this.left)))
+        this.ctx.rotate(this.angle)
+        this.ctx.drawImage(this.legs.image,this.legs.posIniX,this.legs.posIniY,this.legs.wSprite,this.legs.hSprite,this.legs.wSprite/-2*this.scale,this.legs.hSprite/-2*this.scale*1.3,this.legs.wSprite*this.scale,this.legs.hSprite*this.scale*1.3)
+        this.ctx.restore()
+    }
+    drawBars(){
         this.LifeBar.draw(5+this.canvas.width/6,35+5,this.canvas.width/3,50,1,this.life,this.lifeTotal)
         this.xpBar.draw(5+this.canvas.width/6,35+5+50+5,this.canvas.width/3,50,1,this.xp,this.xpTotal,50,20,['#444','#000','#09f'])
-        this.ctx.restore()
     }
     verifyMovement(event,press){
         if(event.keyCode===65){
@@ -213,7 +267,11 @@ export class Player extends AnimatedObject{
         this.#ready=true
         this.playerAnima = setInterval(()=>{
             this.translateColumn(1)
+            
         },200) 
+        this.legsAnima = setInterval(()=>{
+            this.legs.translateColumn(1)
+        },30) 
     }
     #checkOnScreen(){
         setInterval(()=>{

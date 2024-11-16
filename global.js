@@ -3,6 +3,10 @@ export class Global{
         this.damageCounts=[]
         this.rams=[]
         this.globalVolume = 1
+        this.particles = {
+            layer1: [],
+            layer2: []
+        }
     }
 
     playSound(src) {
