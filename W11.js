@@ -18,7 +18,7 @@ export class W11 extends Enemy {
         },850)
     }
     #shoot(){
-        this.global.rams.push(new Ram(this.canvas,this.pos,this.angle))
+        this.global.rams.push(new Ram(this.canvas,this.pos,this.angle, this.global))
     }
     mudarVida(value){
         this.life+=value

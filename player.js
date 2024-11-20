@@ -104,20 +104,20 @@ export class Player extends AnimatedObject{
         this.ctx.save()
         this.ctx.filter = `brightness(${this.filtros[0]}) sepia(${this.filtros[1]}) opacity(${this.filtros[2]})`
         this.ctx.translate(this.pos.x,this.pos.y)
-        // if(this.right-this.left!=0){
-            // if(this.right-this.left==-1){
-            //     this.ctx.rotate(Math.PI/180*(45*(this.top-this.bottom)))
+        if(this.right-this.left!=0){
+            if(this.right-this.left==-1){
+                this.ctx.rotate(Math.PI/180*(45*(this.top-this.bottom)))
                 
-            // }else if(this.right-this.left==1){
-            //     this.ctx.rotate(Math.PI/180*(-45*(this.top-this.bottom)))
+            }else if(this.right-this.left==1){
+                this.ctx.rotate(Math.PI/180*(-45*(this.top-this.bottom)))
                 
-            // }
-        // }else if(this.top){
-        //     this.ctx.rotate(Math.PI)
+            }
+        }else if(this.top){
+            this.ctx.rotate(Math.PI)
             
-        // }
-        // this.ctx.rotate(Math.PI/180*(-90*(this.right-this.left)))
-        this.ctx.rotate(this.angle)
+        }
+        this.ctx.rotate(Math.PI/180*(-90*(this.right-this.left)))
+        // this.ctx.rotate(this.angle)
         this.ctx.drawImage(this.legs.image,this.legs.posIniX,this.legs.posIniY,this.legs.wSprite,this.legs.hSprite,this.legs.wSprite/-2*this.scale,this.legs.hSprite/-2*this.scale*1.3,this.legs.wSprite*this.scale,this.legs.hSprite*this.scale*1.3)
         this.ctx.restore()
     }
@@ -192,7 +192,7 @@ export class Player extends AnimatedObject{
     }
     shoot(mousePos){
         if(this.#ready){
-            this.bullets.push(new Linux(this.canvas,'./assets/imgs/linux.png', 1, 1, mousePos, this))
+            this.bullets.push(new Linux(this.canvas,'./assets/imgs/linux.png', 1, 1, mousePos, this, this.global))
             this.global.playSound('/assets/sounds/shoot.mp3')
             this.bullets[this.bullets.length-1].scale=.3
             clearInterval(this.playerAnima)
@@ -220,6 +220,7 @@ export class Player extends AnimatedObject{
                     element2.takeDamage(element2,element,SpawnerEnemies)
                     element.life--;
                     element.enemies.push(element2)
+                    new Particle('./assets/imgs/boooom2.png',1,9,500,2,element.pos.x,element.pos.y,2,this.global,element.ctx, Math.PI/180*Math.floor(Math.random() * (360)), 0)
                     if(element.life<=0){
                         break
                     }

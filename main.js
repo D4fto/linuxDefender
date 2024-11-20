@@ -54,13 +54,13 @@ function playMusic() {
     });
 }
 
-const player = new Player('./assets/imgs/narci.png', 2, 9, {x: canvas.width/2, y:canvas.height/2},canvas, global)
-player.scale = 3
+global.player = new Player('./assets/imgs/narci.png', 2, 9, {x: canvas.width/2, y:canvas.height/2},canvas, global)
+global.player.scale = 3
 
 let level=1
 let score = 0
 let clickando = false
-let SpawnerEnemies = new Enemies(canvas,player,global)
+let SpawnerEnemies = new Enemies(canvas,global.player,global)
 let isMenu = true
 canvas.addEventListener('click',(event)=>{
     playMusic()
@@ -81,7 +81,7 @@ canvas.addEventListener('click',(event)=>{
     }
 })
 function config(){
-    player.initialize()
+    global.player.initialize()
     SpawnerEnemies.initialize()
     redimensionar()
 }
@@ -94,15 +94,15 @@ canvas.addEventListener('pointerup',()=>{
 setInterval(()=>{
     if(clickando){
         for (let i = 0; i < 1; i++) {
-            player.shoot(mousePos)
+            global.player.shoot(mousePos)
         }
     }
 },200) 
 window.addEventListener('keydown',(event)=>{
-    player.verifyMovement(event,true)
+    global.player.verifyMovement(event,true)
 })
 window.addEventListener('keyup',(event)=>{
-    player.verifyMovement(event,false)
+    global.player.verifyMovement(event,false)
 })
 
 function mouse(){
@@ -150,21 +150,15 @@ let rotation = 0
 function main(){
     clear()
     isMenu=false
-    rotation = player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
+    rotation = global.player.verifyPlayerCollide(SpawnerEnemies)?Math.random()*(.6)-.3:rotation
     if(rotation!=0){
         background.style.transform = `rotate(${rotation}rad)`
-        background.style.transformOrigin = `${player.pos.x+(diagonal)}px ${player.pos.y+(diagonal)}px`
+        background.style.transformOrigin = `${global.player.pos.x+(diagonal)}px ${global.player.pos.y+(diagonal)}px`
     }
     ctx.save();
-    ctx.translate(player.pos.x + player.wSprite / 2, player.pos.y + player.hSprite / 2);
+    ctx.translate(global.player.pos.x + global.player.wSprite / 2, global.player.pos.y + global.player.hSprite / 2);
     ctx.rotate(rotation);
-    ctx.translate(-player.pos.x - player.wSprite / 2, -player.pos.y - player.hSprite / 2);
-    
-    // ctx.scale(.1,.1)
-    rotation = global.drawRams(player)?Math.random()*(.6)-.3:rotation
-    SpawnerEnemies.verifyEnemies()
-    player.verifyBullets(SpawnerEnemies)
-    global.drawDamageCounts()
+    ctx.translate(-global.player.pos.x - global.player.wSprite / 2, -global.player.pos.y - global.player.hSprite / 2);
     for (let i = 0; i < global.particles.layer1.length; i++) {
         let element = global.particles.layer1[i];
         if(element.life<=0){
@@ -172,11 +166,24 @@ function main(){
         }
         element.draw()
     }
-    player.draw(mousePos,rotation)
+    
+    // ctx.scale(.1,.1)
+    rotation = global.drawRams(global.player)?Math.random()*(.6)-.3:rotation
+    SpawnerEnemies.verifyEnemies()
+    for (let i = 0; i < global.particles.layer2.length; i++) {
+        let element = global.particles.layer2[i];
+        if(element.life<=0){
+            global.particles.layer2.splice(i,1)
+        }
+        element.draw()
+    }
+    global.player.verifyBullets(SpawnerEnemies)
+    global.drawDamageCounts()
+    global.player.draw(mousePos,rotation)
     ctx.restore()
     vignette()
     mouse()
-    player.drawBars()
+    global.player.drawBars()
     drawScoreLevel()
     if(rotation>.03){
         rotation-=.0175
@@ -185,12 +192,11 @@ function main(){
     }else{
         rotation=0
     }
-    if(player.life<=0){
+    if(global.player.life<=0){
         stop()
-        score=player.getScore()
-        level=player.level
+        score=global.player.getScore()
+        level=global.player.level
         reset()
-        redimensionar()
         global.playSound('./assets/sounds/Windows XP  Sound 2.mp3')
         start(menuKill,60)
     }
@@ -203,8 +209,8 @@ function drawScoreLevel(){
     ctx.fillStyle='#fff'
     ctx.textBaseline = 'top'
     ctx.textAlign = 'right'
-    ctx.fillText(`SCORE: ${player.getScore()}`,canvas.width-10,10)
-    ctx.fillText(`LEVEL: ${player.level}`,canvas.width-10,10+10+50)
+    ctx.fillText(`SCORE: ${global.player.getScore()}`,canvas.width-10,10)
+    ctx.fillText(`LEVEL: ${global.player.level}`,canvas.width-10,10+10+50)
 }
 function menu(){
     isMenu=true
@@ -265,7 +271,7 @@ function stop(){
 }
 function reset(){
     isMenu=false
-    player.reset()
+    global.player.reset()
     SpawnerEnemies.reset()
 }
 stop()

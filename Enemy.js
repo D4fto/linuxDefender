@@ -3,6 +3,7 @@ import { CollisionShape } from "./CollisionShape.js";
 import { LifeBar } from "./LifeBar.js";
 import { DamageCount } from "./damageCount.js";
 
+
 export class Enemy extends AnimatedObject{
     static spawnRate = 1
     constructor(src, rows, columns, canvas, player, global){

@@ -1,3 +1,4 @@
+import { Particle } from "./particle.js"
 export class Global{
     constructor(){
         this.damageCounts=[]
@@ -34,12 +35,14 @@ export class Global{
                 player.tomarDano(element.damage);
                 foi = true
                 this.playSound('/assets/sounds/ramBreaking.mp3')
+                new Particle('./assets/imgs/boooomRAM.png',1,9,500,element.scale*2,element.pos.x,element.pos.y,2,element.global,element.ctx, Math.PI/180*Math.floor(Math.random() * (360)), 0)
                 this.rams.splice(i, 1);
             }
             for (const element2 of player.bullets) {
                 if(element.CollisionShape.verifyCollision(element2.pos.x,element2.pos.y,element2.wSprite*element2.scale,element2.hSprite*element2.scale,element2.angle)){
                     element2.life--
                     this.playSound('/assets/sounds/ramBreaking.mp3')
+                    new Particle('./assets/imgs/boooomRAM.png',1,9,500,element.scale*2,element.pos.x,element.pos.y,2,element.global,element.ctx, Math.PI/180*Math.floor(Math.random() * (360)), 0)
                     this.rams.splice(i, 1);
                 }
             }

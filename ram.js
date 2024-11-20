@@ -2,7 +2,7 @@ import { AnimatedObject } from "./AnimatedObject.js"
 import { CollisionShape } from "./CollisionShape.js";
 
 export class Ram extends AnimatedObject{
-    constructor(canvas, pos, angle) {
+    constructor(canvas, pos, angle, global) {
         const src = './assets/imgs/ram.png';
         const rows = 1;
         const columns = 1;
@@ -11,6 +11,7 @@ export class Ram extends AnimatedObject{
             x: pos.x,
             y: pos.y
         }
+        this.global = global
         this.angle = angle
         this.speed = 25
         this.alive = true

@@ -1,9 +1,9 @@
 import { AnimatedObject } from "./AnimatedObject.js";
 import { CollisionShape } from "./CollisionShape.js";
-
+import { Particle } from "./particle.js";
 
 export class Linux extends AnimatedObject{
-    constructor(canvas,src, rows, columns, mousePos, player){
+    constructor(canvas,src, rows, columns, mousePos, player, global){
         super(src, rows,  columns)
         this.precision=2
         this.pos = {x: player.pos.x+Math.cos(player.angle)*-7*player.scale, y: player.pos.y+Math.sin(player.angle)*-7*player.scale}
@@ -11,6 +11,7 @@ export class Linux extends AnimatedObject{
         this.speed = 40
         this.life=3
         this.damage = 1
+        this.global = global
         this.enemies=[]
         this.canvas=canvas
         this.ctx=this.canvas.getContext('2d')
@@ -22,6 +23,9 @@ export class Linux extends AnimatedObject{
     }
     draw(ctx){
         this.#move()
+        // for (let i = 0; i < 3; i++) {
+        //     new Particle('./assets/imgs/boooom.png',1,9,150,this.scale*2,this.pos.x,this.pos.y,2,this.global,this.ctx, this.angle+Math.PI+Math.PI/180*Math.floor(Math.random() * (20 + 20) - 20), 10+Math.floor(Math.random() * (5 + 5) - 5),.5)
+        // }
         this.CollisionShape.update(this.pos.x,this.pos.y,this.wSprite*this.scale,this.hSprite*this.scale/1.5,this.angle)
         this.CollisionShape.draw(ctx, '#0f0')
         ctx.beginPath();

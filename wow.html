@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #121212;
+            width: 100vw;
+            height: 100vh;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        .title{
+            color: #a447fe;
+            font-family: "Unica One", sans-serif;
+            padding: 20px;
+            font-size: 3rem;
+            letter-spacing: 5px;
+            border-bottom: 5px solid #a447fe;
+        }
+        .main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            gap: 50px;
+        }
+        input{
+            background-color: #121212;
+            border: 2px solid #a447fe;
+            padding: 10px;
+            color: #fff;
+            font-size: 2em;
+        }
+        label, p{
+            font-size: 2em;
+        }
+        button{
+            font-size: 2em;
+            color: #fff;
+            background-color: #a447fe;
+            border: 2px solid #a447fe;
+            padding: 10px 70px;
+            cursor: pointer;
+        }
+        #output{
+            color: #a447fe;;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Grey+Qo&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=LXGW+WenKai+TC:wght@700&family=Unica+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 class="title">T.O.M.Á.S</h1>
+    <div class="main">
+        <div>
+            <input type="number" id="8"><label for="8"> d8</label>
+        </div>
+        <button id="buttonD8" onclick="rolar(8)">Rolar</button>
+        <p>Resultado: <span id="output"></span></p>
+    </div>
+    <script>
+        let min = 99999999999999
+        function rolar(dado){
+                
+                let number = Number(document.getElementById(dado).value)
+                let result = 0
+                for (let i = 0; i < number; i++) {
+                    let x = 1
+                    while (x<=1) {
+                        x=Math.floor(Math.random()*(dado+1))
+                }
+                
+                result+=x
+            }
+            if(min>result){
+                min = result
+                console.log(min)
+            }
+            document.getElementById('output').innerHTML=result
+        }
+
+    </script>
+</body>
+</html>

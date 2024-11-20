@@ -17,11 +17,9 @@ export class Button{
         this.width=width
         this.height=height
         this.ctx.beginPath()
+        this.ctx.save()
         if(this.isHovered){
             this.ctx.filter = `brightness(.75)`
-        }
-        else{
-            this.ctx.filter = `brightness(1)`
         }
         this.ctx.fillStyle = this.border[1]
         this.ctx.fillRect(this.x, this.y, this.width, this.height)
@@ -32,7 +30,7 @@ export class Button{
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'middle'
         this.ctx.fillText(this.text,this.x+this.width/2,this.y+this.height/2-5,this.width-this.border[0]*2-5)
-        this.ctx.filter = `brightness(1)`
+        this.ctx.restore()
     }
     varifyHover(mouseX, mouseY) {
         this.isHovered = mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height;

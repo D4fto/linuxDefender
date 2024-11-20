@@ -1,6 +1,6 @@
 import { Spawner } from "./Spawner.js";
 import Allenemies from "./Allenemies.js";
-
+import { Particle } from "./particle.js";
 export class Enemies{
     constructor(canvas,player, global){
         this.enemies=[]
@@ -42,6 +42,7 @@ export class Enemies{
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const element = this.enemies[i]
             if(element.life<=0){
+                new Particle('./assets/imgs/boooom.png',1,9,500,element.scale*3.5,element.pos.x,element.pos.y,2,this.global,element.ctx, Math.PI/180*Math.floor(Math.random() * (360)), 0)
                 this.player.updateXp(this.enemies[i].value,this)
                 this.enemies.splice(i, 1);
                 continue
